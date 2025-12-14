@@ -2,7 +2,7 @@
 version: "2.3"
 services:
   app:
-    image: ghcr.io/linuxserver/radarr:6.0.4@sha256:06ac318ecb95a34c7b229568dcb4271f02cb5007bb189a0dd67a2032864187ca
+    image: ghcr.io/linuxserver/radarr:6.0.4@sha256:6c0948b42c149e36bb3dbc0b64d36c77b2d3c9dccf1b424c4f72af1e57ba0c21
     hostname: ${ALIAS:-radarr}
     networks:
       - cloudflare-net
