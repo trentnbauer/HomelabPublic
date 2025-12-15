@@ -22,8 +22,6 @@ services:
       - dockflare.1.access.policy=${CFPOLICY:-default_tld}
       - dockflare.1.zonename=${CFDOMAIN}
       - dockflare.1.path=${CFURLPATH:-}/login
-    networks:
-        - cloudflare-net
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:5690
       interval: 30s
@@ -41,8 +39,3 @@ services:
 volumes:
   db:
   steps:
-
-networks:
-    cloudflare-net:
-        name: cloudflare-net
-        external: true
