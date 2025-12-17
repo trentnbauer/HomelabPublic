@@ -1,0 +1,56 @@
+version: "3.4"
+
+services:
+  app:
+    image: ghcr.io/hargata/lubelogger:v1.5.5@sha256:9fce15cb8c96e5ad36b0dc810b63caf083bb2d66fa2cb6cfb5152bf97fc2a447
+    restart: unless-stopped
+    volumes:
+      - data:/App/data
+      - keys:/root/.aspnet/DataProtection-Keys
+    ports:
+      - ${WEBPORT:-8080}:8080
+    environment:
+      - LC_ALL=${LANG:-en_AU}.UTF-8
+      - LANG=${LANG:-en_AU}.UTF-8
+      - MailConfig__EmailServer=${SMTP_SERVER:-smtp.gmail.com}
+      - MailConfig__EmailFrom=$SMTP_FROM
+      - MailConfig__Port=${SMTP_PORT:-587}
+      - MailConfig__Username=$SMTP_USER
+      - MailConfig__Password=$SMTP_PASS
+      #- LOGGING__LOGLEVEL__DEFAULT=Error
+      - OpenIDConfig__Name=${OIDC_NAME:-Google}
+      - OpenIDConfig__ClientId=$OIDC_CLIENT
+      - OpenIDConfig__ClientSecret=$OIDC_SECRET
+      - OpenIDConfig__AuthURL=${OIDC_AuthUrl:-https://accounts.google.com/o/oauth2/auth}
+      - OpenIDConfig__TokenURL=${OIDC_TokenUrl:-https://oauth2.googleapis.com/token}
+      - OpenIDConfig__RedirectURL=https://${CFSUBDOMAIN}${CFDOMAIN}/Login/RemoteAuth
+      - OpenIDConfig__Scope=${OIDC_SCOPE:-email}
+      - OpenIDConfig__ValidateState=${OIDC_Validate:-false}
+      - OpenIDConfig__UsePKCE=${OIDC_UsePKCE:-true}
+      - OpenIDConfig__DisableRegularLogin=${OIDC_DisableRegAuth:-true}
+      - OpenIDConfig__LogOutURL=${OIDC_LogOutUrl:-https://www.google.com/accounts/Logout}
+      - EnableAuth=${ENABLEAUTH:-true}
+      - LUBELOGGER_DOMAIN=https://${CFSUBDOMAIN}${CFDOMAIN}
+      - OpenIDConfig__TroubleshootingMode=true
+      ### https://docs.lubelogger.com/Advanced/Environment%20Variables
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3" 
+    healthcheck:
+      test: ["CMD-SHELL", "/bin/bash -c 'echo > /dev/tcp/127.0.0.1/8080 || exit 1'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - autoheal=true
+      - dockflare.enable=${CFTUNNEL:-true}
+      - dockflare.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dockflare.0.service=http://${HOSTNAME:-localhost}:${WEBPORT:-8080}
+      - dockflare.0.access.policy=${CFPOLICY:-default_tld} #default_tld, authenticate, bypass
+      - dockflare.0.zonename=${CFDOMAIN}
+      - dockflare.0.path=${CFURLPATH:-}
+volumes:
+  data:
+  keys:
