@@ -108,7 +108,7 @@ services:
     ports:
       - ${DOCKFLAREPORT:-5000}:5000
     environment:
-      - TUNNEL_NAME=${CF_TUNNELNAME:-MissingHostname}
+      - TUNNEL_NAME=${HOSTNAME:-MissingHostname}
       - CLOUDFLARED_NETWORK_NAME=dockflare
       - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
       - REDIS_URL=redis://dockflare-db:6379/0
@@ -130,8 +130,8 @@ services:
     labels:
       - autoheal=true
       - dockflare.enable=true
-      - dockflare.0.hostname=${CF_TUNNELNAME:-MissingHostname}.dockflare.${URLTLD}
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${DOCKLAREPORT:-5000}
+      - dockflare.0.hostname=${HOSTNAME:-MissingHostname}.dockflare.${URLTLD}
+      - dockflare.0.service=http://${HOSTNAME_FQDN:-localhost}:${DOCKLAREPORT:-5000}
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=${URLTLD}
       #- cloudflare.tunnel.path=${URLPATH:-}
@@ -171,7 +171,7 @@ services:
       - autoheal=true
       - dockflare.enable=true
       - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-portracker.${URLTLD}
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${PORTACKERPORT:-4999}
+      - dockflare.0.service=http://${HOSTNAME_FQDN:-localhost}:${PORTACKERPORT:-4999}
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=${URLTLD}
       #- cloudflare.tunnel.path=${URLPATH:-}
