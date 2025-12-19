@@ -125,7 +125,7 @@ services:
       - TUNNEL_METRICS=localhost:2000
     command: tunnel --no-autoupdate run
     healthcheck:
-      command: cloudflared tunnel health --ready-endpoint localhost:2000/ready
+      test: ["CMD", "cloudflared" ,"tunnel", "health:", "--ready-endpoint", "localhost:2000/ready"]
       interval: 10s
       retries: 5
       timeout: 9s
