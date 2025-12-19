@@ -121,7 +121,7 @@ services:
     image: cloudflare/cloudflared:2025.11.1
     restart: unless-stopped
     environment:
-      - TUNNEL_TOKEN=${CFTUNNELID}
+      - TUNNEL_TOKEN=${CFTUNNELTOKEN}
       - TUNNEL_METRICS=localhost:2000
     command: tunnel --no-autoupdate run
     healthcheck:
