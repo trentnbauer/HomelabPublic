@@ -108,11 +108,11 @@ services:
     ports:
       - ${DOCKFLAREPORT:-5000}:5000
     environment:
+      - CLOUDFLARED_NETWORK_NAME=dockflare
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
       - REDIS_URL=redis://dockflare-db:6379/0
       - REDIS_DB_INDEX=0
       - DOCKER_HOST=tcp://dockflare-proxy:2375
-      - USE_EXTERNAL_CLOUDFLARED=true
-      - EXTERNAL_TUNNEL_ID={$CF_TUNNELID}
       - TZ=${TZ:-Australia/Melbourne}
       - CF_API_TOKEN=${CF_APITOKEN}
       - CF_ACCOUNT_ID=${CF_ACCOUNTID}
@@ -154,24 +154,6 @@ services:
       - dockflare_db:/data
     networks:
       - dockflare
-
-  cf-tunnel:
-    image: cloudflare/cloudflared:2025.11.1
-    restart: unless-stopped
-    networks:
-      - dockflare
-    environment:
-      - TUNNEL_TOKEN=${CF_TUNNELTOKEN}
-      - TUNNEL_METRICS=localhost:2000
-    command: tunnel --no-autoupdate run
-    healthcheck:
-      test: ["CMD", "cloudflared" ,"tunnel", "health:", "--ready-endpoint", "localhost:2000/ready"]
-      interval: 10s
-      retries: 5
-      timeout: 9s
-      start_period: 30s
-    labels:
-      - autoheal=true
       
   portracker:
     image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
