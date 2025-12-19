@@ -107,3 +107,7 @@ services:
 
 volumes:
   dockflare_agent:
+
+networks:
+  cloudflare-net:
+    driver: host
