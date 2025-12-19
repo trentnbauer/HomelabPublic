@@ -72,48 +72,6 @@ services:
       timeout: 60s
     labels:
       - autoheal=true
-
-  dockflare:
-    image: alplat/dockflare:v2.1.7@sha256:015653bdd533b6f4e81057e3b29500622ab3c56b2c244129451f8d02f311814f
-    restart: unless-stopped
-    networks:
-      - cloudflare-net
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider ${PROTOCOL:-http}://localhost:5000 -O /dev/null || exit 1
-      interval: 30s
-      retries: 3
-      start_period: 30s
-      timeout: 20s 
-    ports:
-      - ${DOCKFLAREPORT:-5000}:5000
-    environment:
-      - STATE_FILE_PATH=/app/data/state.json
-      - TZ=${TZ:-Australia/Melbourne}
-      - CF_API_TOKEN=$CFAPITOKEN
-      - CF_ACCOUNT_ID=$CFACCOUNTID
-      #- CF_ZONE_ID=$CFZONEID
-      - TUNNEL_NAME=${CFTUNNELNAME:-MissingTunnelName}
-      - LABEL_PREFIX=dockflare
-      - GRACE_PERIOD_SECONDS=28800
-      - CLEANUP_INTERVAL_SECONDS=900
-      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=30
-      - SCAN_ALL_NETWORKS=true
-      - MAX_CONCURRENT_DNS_OPS=2
-      - TUNNEL_DNS_SCAN_ZONE_NAMES=${DNSSCANZONES:-}
-      - CLOUDFLARED_NETWORK_NAME=${CLOUDFLARED_NETWORK_NAME:-host}
-      - DOCKFLARE_PASSWORD=${DOCKFLAREPASSWORD}
-      - SECRET_KEY=${DOCKFLAREKEY}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - dockflare_data:/app/data
-    labels:
-      - autoheal=true
-      - dockflare.enable=true
-      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-tunnel.$URLTLD
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${DOCKLAREPORT:-5000}
-      - dockflare.0.access.policy=default_tld
-      - dockflare.0.zonename=$URLTLD
-      #- cloudflare.tunnel.path=${URLPATH:-}
       
   portracker:
     image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
