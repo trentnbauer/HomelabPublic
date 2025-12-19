@@ -80,7 +80,6 @@ services:
       
   dockflare-agent:
     image: alplat/dockflare-agent:latest
-    container_name: dockflare-agent
     restart: unless-stopped
     environment:
       - DOCKER_HOST=tcp://dockflare-proxy:2375
