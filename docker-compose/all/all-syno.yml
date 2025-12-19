@@ -16,7 +16,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
-
+  
   docker-socket-proxy:
     network_mode: host
     image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
@@ -33,13 +33,37 @@ services:
     labels:
       - autoheal=true
       
+  prunemate-proxy:
+    network_mode: host
+    image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - ALLOW_START=1
+      - ALLOW_STOP=1
+      - ALLOW_RESTART=1
+      - IMAGES=1
+      - CONTAINERS=1
+      - VOLUMES=1
+      - NETWORKS=1
+      - POST=1
+    healthcheck:
+      test: wget --spider http://localhost:2375/version || exit 1
+      interval: "29s"
+      timeout: "5s"
+      retries: 3
+      start_period: "21s"
+    labels:
+      - autoheal=true
+      
   watchtower:
     image: ghcr.io/containrrr/watchtower:1.7.1
-    restart: always
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ:-Australia/Melbourne}
       - WATCHTOWER_ROLLING_RESTART=true
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_INCLUDE_STOPPED=true
@@ -58,56 +82,95 @@ services:
       - GPU="true"
     healthcheck:
       test: ['CMD', '/agent', 'health']
-      start_period: 5s 
+      start_period: 30s
       interval: 120s
+      retries: 3
+      timeout: 60s
     labels:
       - autoheal=true
 
-  dockflare:
-    image: alplat/dockflare:v2.1.7@sha256:015653bdd533b6f4e81057e3b29500622ab3c56b2c244129451f8d02f311814f
+  dockflare-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.1
     restart: unless-stopped
+    logging:
+      driver: "none"  # Minimize the logs, remove for verbose
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - CONTAINERS=1
+      - EVENTS=1
+      - NETWORKS=1
+      - IMAGES=1
+      - POST=1
+      - PING=1
+      - INFO=1
+      - EXEC=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - cloudflare-net
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:5000 -O /dev/null || exit 1
-      interval: 30s
-      retries: 3
-      start_period: 30s
-      timeout: 20s 
+      - dockflare
+
+  dockflare-init:
+    image: alpine:3.20
+    command: ["sh", "-c", "chown -R ${DOCKFLARE_UID:-65532}:${DOCKFLARE_GID:-65532} /app/data"]
+    volumes:
+      - dockflare_app:/app/data
+    networks:
+      - dockflare
+    restart: "no"
+
+  dockflare-app:
+    image: alplat/dockflare:stable@sha256:d5d77c1caeb3a82467499371dd5e7c9ab7c2c03c527d4f1465062b755aa7c8ca
+    restart: unless-stopped
     ports:
       - ${DOCKFLAREPORT:-5000}:5000
     environment:
-      - STATE_FILE_PATH=/app/data/state.json
+      - TUNNEL_NAME=${HOSTNAME:-MissingHostname}
+      - CLOUDFLARED_NETWORK_NAME=dockflare
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
+      - REDIS_URL=redis://dockflare-db:6379/0
+      - REDIS_DB_INDEX=0
+      - DOCKER_HOST=tcp://dockflare-proxy:2375
       - TZ=${TZ:-Australia/Melbourne}
-      - CF_API_TOKEN=$CFAPITOKEN
-      - CF_ACCOUNT_ID=$CFACCOUNTID
-      #- CF_ZONE_ID=$CFZONEID
-      - TUNNEL_NAME=${CFTUNNELNAME}
-      - LABEL_PREFIX=dockflare
+      - CF_API_TOKEN=${CF_APITOKEN}
+      - CF_ACCOUNT_ID=${CF_ACCOUNTID}
+      - CLEANUP_INTERVAL_SECONDS=3600
       - GRACE_PERIOD_SECONDS=28800
       - CLEANUP_INTERVAL_SECONDS=900
-      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=60
+      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=15
       - SCAN_ALL_NETWORKS=true
       - MAX_CONCURRENT_DNS_OPS=1
-      - TUNNEL_DNS_SCAN_ZONE_NAMES=${DNSSCANZONES:-}
-      - CLOUDFLARED_NETWORK_NAME=${CLOUDFLARED_NETWORK_NAME:-host}
-      - DOCKFLARE_PASSWORD=${DOCKFLAREPASSWORD}
-      - SECRET_KEY=${DOCKFLAREKEY}
+      - SYNC_ALL_CLOUDFLARE_POLICIES=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - dockflare_data:/app/data
+      - dockflare_app:/app/data
     labels:
       - autoheal=true
       - dockflare.enable=true
-      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-tunnel.${URLTLD}
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${DOCKFLAREPORT:-5000}
+      - dockflare.0.hostname=${HOSTNAME:-MissingHostname}.dockflare.${URLTLD}
+      - dockflare.0.service=http://${HOSTNAME_FQDN:-localhost}:${DOCKLAREPORT:-5000}
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=${URLTLD}
-      - dockflare.1.hostname=nas.${URLTLD}
-      - dockflare.1.service=https://${HOSTNAME:-localhost}:5001
-      - dockflare.1.access.policy=default_tld
-      - dockflare.1.zonename=${URLTLD}
-      - dockflare.1.no_tls_verify=true
+      #- cloudflare.tunnel.path=${URLPATH:-}
+    depends_on:
+      dockflare-proxy:
+        condition: service_started
+      dockflare-init:
+        condition: service_completed_successfully
+      dockflare-db:
+        condition: service_started
+    networks:
+      - dockflare
+
+  dockflare-db:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    logging:
+      driver: "none"  # less logs, remove for verbose / more logs
+    volumes:
+      - dockflare_db:/data
+    networks:
+      - dockflare
       
   portracker:
     image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
@@ -115,7 +178,7 @@ services:
     network_mode: "host"
     pid: "host"
     volumes:
-      - portacker_data:/data
+      - portacker:/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - DATABASE_PATH=/data/portracker.db
@@ -123,16 +186,16 @@ services:
     labels:
       - autoheal=true
       - dockflare.enable=true
-      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-portacker.$URLTLD
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${PORTACKERPORT:-4999}
+      - dockflare.0.hostname=${HOSTNAME:-MissingHostname}.portracker.${URLTLD}
+      - dockflare.0.service=http://${HOSTNAME_FQDN:-localhost}:${PORTACKERPORT:-4999}
       - dockflare.0.access.policy=default_tld
-      - dockflare.0.zonename=$URLTLD
+      - dockflare.0.zonename=${URLTLD}
+      #- cloudflare.tunnel.path=${URLPATH:-}
 
 volumes:
-  dockflare_data:
-  portacker_data:
-  ossec:
+  dockflare_app:
+  dockflare_db:
+  portacker:
+
 networks:
-  cloudflare-net: 
-    name: cloudflare-net 
-    #external: true
+  dockflare: 
