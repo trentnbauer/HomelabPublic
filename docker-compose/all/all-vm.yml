@@ -76,6 +76,8 @@ services:
   dockflare-proxy:
     image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
     restart: unless-stopped
+    networks:
+      - dockflare
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - CONTAINERS=1
@@ -91,6 +93,9 @@ services:
   dockflare-agent:
     image: alplat/dockflare-agent:latest
     restart: unless-stopped
+    networks:
+      - dockflare
+      - cloudflare-net
     environment:
       - DOCKER_HOST=tcp://dockflare-proxy:2375
       - DOCKFLARE_MASTER_URL=${DOCKFLARE_MASTER_URL}
@@ -111,3 +116,4 @@ volumes:
 networks:
   cloudflare-net:
     driver: host
+  dockflare:
