@@ -63,30 +63,38 @@ services:
     labels:
       - autoheal=true
       
-  portracker:
-    image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
+  dockflare-proxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
     restart: unless-stopped
-    network_mode: "host"
-    pid: "host"
-    volumes:
-      - portacker_data:/data
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - DATABASE_PATH=/data/portracker.db
-      - PORT=${PORTACKERPORT:-4999}
-    labels:
-      - autoheal=true
-      - dockflare.enable=true
-      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-portacker.$URLTLD
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${PORTACKERPORT:-4999}
-      - dockflare.0.access.policy=default_tld
-      - dockflare.0.zonename=$URLTLD
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - CONTAINERS=1
+      - EVENTS=1
+      - NETWORKS=1
+      - IMAGES=1
+      - POST=1
+      - PING=1
+      - EXEC=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      
+  dockflare-agent:
+    image: alplat/dockflare-agent:latest
+    container_name: dockflare-agent
+    restart: unless-stopped
+    environment:
+      - DOCKER_HOST=tcp://dockflare-proxy:2375
+      - DOCKFLARE_MASTER_URL=${DOCKFLARE_MASTER_URL}
+      - DOCKFLARE_API_KEY=${DOCKFLARE_API_KEY}
+      - AGENT_DISPLAY_NAME=${HOSTNAME}
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
+      - TZ=${TZ:-Australia/Melbourne}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - SCAN_ALL_NETWORKS=true
+    volumes:
+      - dockflare_agent:/app/data
+    depends_on:
+      - dockflare-proxy
 
 volumes:
-  dockflare_data:
-  portacker_data:
-  ossec:
-networks:
-  cloudflare-net: 
-    name: cloudflare-net 
-    #external: true
+  dockflare_agent:
