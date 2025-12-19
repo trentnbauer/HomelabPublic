@@ -73,7 +73,7 @@ services:
     labels:
       - autoheal=true
 
-  dockflare-socket-proxy:
+  dockflare-proxy:
     image: tecnativa/docker-socket-proxy:v0.4.1
     restart: unless-stopped
     logging:
@@ -125,7 +125,7 @@ services:
       - SYNC_ALL_CLOUDFLARE_POLICIES=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - dockflare_data:/app/data
+      - dockflare_app:/app/data
     labels:
       - autoheal=true
       - dockflare.enable=true
@@ -135,11 +135,11 @@ services:
       - dockflare.0.zonename=$URLTLD
       #- cloudflare.tunnel.path=${URLPATH:-}
     depends_on:
-      dockflare-socket-proxy:
+      dockflare-proxy:
         condition: service_started
       dockflare-init:
         condition: service_completed_successfully
-      redis:
+      dockflare-db:
         condition: service_started
     networks:
       - dockflare
