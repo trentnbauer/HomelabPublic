@@ -108,9 +108,9 @@ services:
     ports:
       - ${DOCKFLAREPORT:-5000}:5000
     environment:
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://dockflare-db:6379/0
       - REDIS_DB_INDEX=0
-      - DOCKER_HOST=tcp://dockflare-socket-proxy:2375
+      - DOCKER_HOST=tcp://dockflare-proxy:2375
       - USE_EXTERNAL_CLOUDFLARED=true
       - EXTERNAL_TUNNEL_ID={$CF_TUNNELID}
       - TZ=${TZ:-Australia/Melbourne}
