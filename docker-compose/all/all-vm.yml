@@ -103,7 +103,7 @@ services:
     restart: "no"
 
   dockflare-app:
-    image: alplat/dockflare:3
+    image: alplat/dockflare:stable@sha256:d5d77c1caeb3a82467499371dd5e7c9ab7c2c03c527d4f1465062b755aa7c8ca
     restart: unless-stopped
     ports:
       - ${DOCKFLAREPORT:-5000}:5000
