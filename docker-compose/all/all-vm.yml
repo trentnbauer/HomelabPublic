@@ -112,7 +112,7 @@ services:
       - REDIS_DB_INDEX=0
       - DOCKER_HOST=tcp://dockflare-socket-proxy:2375
       - USE_EXTERNAL_CLOUDFLARED=true
-      - EXTERNAL_TUNNEL_ID={$CFTUNNELID}
+      - EXTERNAL_TUNNEL_ID={$CF_TUNNELID}
       - TZ=${TZ:-Australia/Melbourne}
       - CF_API_TOKEN=${CF_APITOKEN}
       - CF_ACCOUNT_ID=${CF_ACCOUNTID}
@@ -129,10 +129,10 @@ services:
     labels:
       - autoheal=true
       - dockflare.enable=true
-      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}.dockflare.${URLTLD}
+      - dockflare.0.hostname=${CF_TUNNELNAME:-MissingHostname}.dockflare.${URLTLD}
       - dockflare.0.service=http://${HOSTNAME:-localhost}:${DOCKLAREPORT:-5000}
       - dockflare.0.access.policy=default_tld
-      - dockflare.0.zonename=$URLTLD
+      - dockflare.0.zonename=${URLTLD}
       #- cloudflare.tunnel.path=${URLPATH:-}
     depends_on:
       dockflare-proxy:
@@ -161,7 +161,7 @@ services:
     networks:
       - dockflare
     environment:
-      - TUNNEL_TOKEN=${CFTUNNELTOKEN}
+      - TUNNEL_TOKEN=${CF_TUNNELTOKEN}
       - TUNNEL_METRICS=localhost:2000
     command: tunnel --no-autoupdate run
     healthcheck:
@@ -187,10 +187,10 @@ services:
     labels:
       - autoheal=true
       - dockflare.enable=true
-      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-portracker.$URLTLD
+      - dockflare.0.hostname=${CFTUNNELNAME:-MissingHostname}-portracker.${URLTLD}
       - dockflare.0.service=http://${HOSTNAME:-localhost}:${PORTACKERPORT:-4999}
       - dockflare.0.access.policy=default_tld
-      - dockflare.0.zonename=$URLTLD
+      - dockflare.0.zonename=${URLTLD}
       #- cloudflare.tunnel.path=${URLPATH:-}
 
 volumes:
