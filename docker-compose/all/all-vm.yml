@@ -92,10 +92,12 @@ services:
     image: alplat/dockflare-agent:latest
     container_name: dockflare-agent
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       - DOCKER_HOST=tcp://dockflare-proxy:2375
+      - DOCKFLARE_MASTER_URL=${DOCKFLARE_MASTER_URL}
+      - DOCKFLARE_API_KEY=${DOCKFLARE_API_KEY}
+      - AGENT_DISPLAY_NAME=${HOSTNAME}
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
       - TZ=${TZ:-Australia/Melbourne}
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - SCAN_ALL_NETWORKS=true
