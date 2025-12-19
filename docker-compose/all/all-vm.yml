@@ -131,8 +131,6 @@ services:
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=$URLTLD
       #- cloudflare.tunnel.path=${URLPATH:-}
-    volumes:
-      - dockflare_app:/app/data
     environment:
       - REDIS_URL=redis://redis:6379/0
       - REDIS_DB_INDEX=0  # Optional: specify Redis database index (0-15) for isolation from other containers
