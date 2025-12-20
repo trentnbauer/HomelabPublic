@@ -134,5 +134,4 @@ services:
 
 volumes:
   dockflare:
-  dockflare:
   portacker:
