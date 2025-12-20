@@ -73,47 +73,9 @@ services:
     labels:
       - autoheal=true
 
-  dockflare-app:
-    image: alplat/dockflare:stable@sha256:d5d77c1caeb3a82467499371dd5e7c9ab7c2c03c527d4f1465062b755aa7c8ca
-    restart: unless-stopped
-    ports:
-      - ${DOCKFLAREPORT:-5000}:5000
-    environment:
-      - TUNNEL_NAME=${HOSTNAME:-MissingHostname}
-      - CLOUDFLARED_NETWORK_NAME=host
-      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
-      - REDIS_URL=redis://dockflare-db:6379/0
-      - REDIS_DB_INDEX=0
-      - DOCKER_HOST=tcp://dockflare-proxy:2375
-      - TZ=${TZ:-Australia/Melbourne}
-      - CF_API_TOKEN=${CF_APITOKEN}
-      - CF_ACCOUNT_ID=${CF_ACCOUNTID}
-      - CLEANUP_INTERVAL_SECONDS=3600
-      - GRACE_PERIOD_SECONDS=28800
-      - CLEANUP_INTERVAL_SECONDS=900
-      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=15
-      - SCAN_ALL_NETWORKS=true
-      - MAX_CONCURRENT_DNS_OPS=1
-      - SYNC_ALL_CLOUDFLARE_POLICIES=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - dockflare_app:/app/data
-
-    depends_on:
-      dockflare-proxy:
-        condition: service_started
-      dockflare-init:
-        condition: service_completed_successfully
-      dockflare-db:
-        condition: service_started
-    networks:
-      - dockflare
-
   dockflare:
     image: alplat/dockflare:v2.1.7@sha256:015653bdd533b6f4e81057e3b29500622ab3c56b2c244129451f8d02f311814f
     restart: unless-stopped
-    networks:
-      - cloudflare-net
     healthcheck:
       test: wget --no-verbose --tries=1 --spider ${PROTOCOL:-http}://localhost:5000 -O /dev/null || exit 1
       interval: 30s
@@ -136,8 +98,8 @@ services:
       - CLEANUP_INTERVAL_SECONDS=900
       - SCAN_ALL_NETWORKS=true
       - MAX_CONCURRENT_DNS_OPS=2
-      - DOCKFLARE_PASSWORD=${DOCKFLAREPASSWORD}
-      - SECRET_KEY=${DOCKFLAREKEY}
+      - DOCKFLARE_PASSWORD=${DOCKFLARE_PASSWORD}
+      - SECRET_KEY=${DOCKFLARE_KEY}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - dockflare:/app/data
@@ -174,6 +136,3 @@ volumes:
   dockflare:
   dockflare:
   portacker:
-
-networks:
-  dockflare: 
