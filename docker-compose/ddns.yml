@@ -8,10 +8,13 @@ services:
     cap_drop: [all] 
     security_opt: [no-new-privileges:true] 
     environment:
-      - CLOUDFLARE_API_TOKEN=${CF_APIKEY}   # Your Cloudflare API token
-      - DOMAINS=${DOMAINS}                  # Your domains (separated by commas)
-      - PROXIED=${PROXIED-false}            # Tell Cloudflare to cache webpages and hide your IP (optional)
-      - DETECTION_TIMEOUT=15s               # Resolves and potential latency issues
+      - CLOUDFLARE_API_TOKEN=${CF_APIKEY}        # Your Cloudflare API token
+      - DOMAINS=${DOMAINS}                       # Your domains (separated by commas)
+      - PROXIED=${PROXIED-false}                 # Tell Cloudflare to cache webpages and hide your IP (optional)
+      - DETECTION_TIMEOUT=15s                    # Resolves and potential latency issues
+      - UPDATE_CRON=@every ${UPDATE_CRON:-5m}    # how often to update
+      - DELETE_ON_STOP=${DELETE_ON_STOP:-false}  # delete the DDNS record when stopping the container
+      - UPDATE_ON_START=${UPDATE_ON_START:-true} # update DDNS when the container starts
     logging:
       driver: "json-file"
       options:
