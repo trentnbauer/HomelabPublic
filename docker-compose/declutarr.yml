@@ -39,7 +39,8 @@ services:
         "Invalid video file, unsupported extension",
         "Invalid season or episode",
         "Unable to parse file",
-        "Single episode file contains all episodes in seasons. Review file name or manually import"
+        "Single episode file contains all episodes in seasons. Review file name or manually import",
+        "Unable to determine if file is a sample"
         ]'
       ## Radarr
       RADARR_URL: $RADARRURL
