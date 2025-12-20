@@ -31,10 +31,10 @@ services:
       - /dev/dri:/dev/dri
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:8265
-      interval: 30s
+      interval: 60s
       retries: 3
-      start_period: 30s
-      timeout: 20s
+      start_period: 1m30s
+      timeout: 55s
     labels:
       - autoheal=true
       - dockflare.enable=${CFTUNNEL:-true}
