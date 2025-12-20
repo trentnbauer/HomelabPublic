@@ -89,13 +89,15 @@ services:
       retries: 3
       start_period: 30s
     labels:
-      - "autoheal=true"
-      - cloudflare.tunnel.enable=true
-      - cloudflare.tunnel.hostname=${SUBDOMAIN}${DOMAIN}
-      - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${PORT_HTTP:-80}
-      - cloudflare.tunnel.access.policy=${CFPOLICY:-default_tld}
-      - cloudflare.tunnel.zonename=${DOMAIN}
-      - cloudflare.tunnel.path=${URLPATH:-}
+      - autoheal=true
+      - dockflare.0.access.enable=true
+      - dockflare.0.access.hostname=${SUBDOMAIN}${DOMAIN}
+      - dockflare.0.access.service=http://${HOSTNAME:-localhost}:${PORT_HTTP:-80}
+      - dockflare.0.access.access.policy=${CFPOLICY:-bypass}
+      - dockflare.0.access.name=${CFACCESSNAME:-Pterodactyl Panel}
+      - dockflare.0.access.session_duration=${CFDURATION:-4h}
+      - dockflare.0.access.zonename=${DOMAIN}
+      - dockflare.0.access.path=${URLPATH:-}
     logging:
       driver: "json-file"
       options:
@@ -109,3 +111,4 @@ volumes:
   db:
   env:
   dbetc:
+
