@@ -17,22 +17,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
   
-  docker-socket-proxy:
-    network_mode: host
-    image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - CONTAINERS=1
-    healthcheck:
-      test: wget --spider http://localhost:2375/version || exit 1
-      interval: "29s"
-      timeout: "5s"
-      retries: 3
-      start_period: "21s"
-    labels:
-      - autoheal=true
-      
   prunemate-proxy:
     network_mode: host
     image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
@@ -89,60 +73,36 @@ services:
     labels:
       - autoheal=true
 
-  dockflare-proxy:
-    image: tecnativa/docker-socket-proxy:v0.4.1
+  dockflare:
+    image: alplat/dockflare:v2.1.7@sha256:015653bdd533b6f4e81057e3b29500622ab3c56b2c244129451f8d02f311814f
     restart: unless-stopped
-    logging:
-      driver: "none"  # Minimize the logs, remove for verbose
-    environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - CONTAINERS=1
-      - EVENTS=1
-      - NETWORKS=1
-      - IMAGES=1
-      - POST=1
-      - PING=1
-      - INFO=1
-      - EXEC=1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - dockflare
-
-  dockflare-init:
-    image: alpine:3.20
-    command: ["sh", "-c", "chown -R ${DOCKFLARE_UID:-65532}:${DOCKFLARE_GID:-65532} /app/data"]
-    volumes:
-      - dockflare_app:/app/data
-    networks:
-      - dockflare
-    restart: "no"
-
-  dockflare-app:
-    image: alplat/dockflare:stable@sha256:d5d77c1caeb3a82467499371dd5e7c9ab7c2c03c527d4f1465062b755aa7c8ca
-    restart: unless-stopped
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider ${PROTOCOL:-http}://localhost:5000 -O /dev/null || exit 1
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 20s 
     ports:
       - ${DOCKFLAREPORT:-5000}:5000
     environment:
       - TUNNEL_NAME=${HOSTNAME:-MissingHostname}
-      - CLOUDFLARED_NETWORK_NAME=dockflare
+      - CLOUDFLARED_NETWORK_NAME=host
       - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
-      - REDIS_URL=redis://dockflare-db:6379/0
-      - REDIS_DB_INDEX=0
-      - DOCKER_HOST=tcp://dockflare-proxy:2375
       - TZ=${TZ:-Australia/Melbourne}
       - CF_API_TOKEN=${CF_APITOKEN}
       - CF_ACCOUNT_ID=${CF_ACCOUNTID}
-      - CLEANUP_INTERVAL_SECONDS=3600
+      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=5
+      - SYNC_ALL_CLOUDFLARE_POLICIES=true
+      - TZ=${TZ:-Australia/Melbourne}
       - GRACE_PERIOD_SECONDS=28800
       - CLEANUP_INTERVAL_SECONDS=900
-      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=15
       - SCAN_ALL_NETWORKS=true
-      - MAX_CONCURRENT_DNS_OPS=1
-      - SYNC_ALL_CLOUDFLARE_POLICIES=true
+      - MAX_CONCURRENT_DNS_OPS=2
+      - DOCKFLARE_PASSWORD=${DOCKFLARE_PASSWORD}
+      - SECRET_KEY=${DOCKFLARE_KEY}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - dockflare_app:/app/data
+      - dockflare:/app/data
     labels:
       - autoheal=true
       - dockflare.enable=true
@@ -151,26 +111,6 @@ services:
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=${URLTLD}
       #- cloudflare.tunnel.path=${URLPATH:-}
-    depends_on:
-      dockflare-proxy:
-        condition: service_started
-      dockflare-init:
-        condition: service_completed_successfully
-      dockflare-db:
-        condition: service_started
-    networks:
-      - dockflare
-
-  dockflare-db:
-    image: redis:7-alpine
-    restart: unless-stopped
-    command: ["redis-server", "--save", "", "--appendonly", "no"]
-    logging:
-      driver: "none"  # less logs, remove for verbose / more logs
-    volumes:
-      - dockflare_db:/data
-    networks:
-      - dockflare
       
   portracker:
     image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
@@ -193,9 +133,5 @@ services:
       #- cloudflare.tunnel.path=${URLPATH:-}
 
 volumes:
-  dockflare_app:
-  dockflare_db:
+  dockflare:
   portacker:
-
-networks:
-  dockflare: 
