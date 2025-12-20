@@ -76,7 +76,7 @@ services:
       - configs:/app/configs
       - logs:/app/logs
       - media:/media
-      - /dev/shm:/temp
+      - /cache:/temp
       - /etc/hostname:/etc/hostname:ro
     devices:
       - /dev/dri:/dev/dri
