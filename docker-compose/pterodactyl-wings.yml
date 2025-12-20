@@ -37,14 +37,14 @@ services:
 #      start_period: 30s
     labels:
 #      - autoheal=true
-      - dockflare.0.access..enable=true
-      - dockflare.0.access..hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - dockflare.0.access..service=http://${HOSTNAME:-localhost}:${PORT:-443}
-      - dockflare.0.access..access.policy=${CFPOLICY:-bypass}
-      - dockflare.0.access.name=${CFACCESSNAME:-Pterodactyl Wings}
-      - dockflare.0.access.session_duration=${CFDURATION:-4h}
-      - dockflare.0.access..zonename=${CFDOMAIN}
-      - dockflare.0.access..path=${CFURLPATH:-}
+      - cloudflare.tunnel.enable=true
+      - cloudflare.tunnel.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${PORT:-443}
+      - cloudflare.tunnel.access.policy=${CFPOLICY:-bypass}
+      - cloudflare.tunnel.name=${CFACCESSNAME:-Pterodactyl Wings}
+      - cloudflare.tunnel.session_duration=${CFDURATION:-4h}
+      - cloudflare.tunnel.zonename=${CFDOMAIN}
+      - cloudflare.tunnel.path=${CFURLPATH:-}
 
   db:
     image: mariadb:12.1
