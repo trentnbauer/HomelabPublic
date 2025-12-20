@@ -10,7 +10,7 @@ services:
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       AUTOHEAL_ONLY_MONITOR_RUNNING: true
       WEBHOOK_URL: ${PUSHOVER_WEBHOOK:-""}
-    image: willfarrell/autoheal@sha256:6176a79899bc9694a7f54b60eeaed092b331bf6406f4af5eecfde3142e9fbea0
+    image: willfarrell/autoheal@sha256:416b45f3ba944978055eb7d982727fbc9aba22f590cb85b4b61b57c60d0036df
     network_mode: none
     restart: always
     volumes:
@@ -77,7 +77,7 @@ services:
     image: alplat/dockflare:v2.1.7@sha256:015653bdd533b6f4e81057e3b29500622ab3c56b2c244129451f8d02f311814f
     restart: unless-stopped
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider ${PROTOCOL:-http}://localhost:5000 -O /dev/null || exit 1
+      test: wget --no-verbose --tries=1 --spider http://localhost:5000 -O /dev/null || exit 1
       interval: 30s
       retries: 3
       start_period: 30s
@@ -97,10 +97,7 @@ services:
       - GRACE_PERIOD_SECONDS=28800
       - CLEANUP_INTERVAL_SECONDS=900
       - SCAN_ALL_NETWORKS=true
-      - MAX_CONCURRENT_DNS_OPS=2
-      - DISABLE_PASSWORD_LOGIN=true
-      #- DOCKFLARE_PASSWORD=${DOCKFLARE_PASSWORD}
-      #- SECRET_KEY=${DOCKFLARE_KEY}
+      - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - dockflare:/app/data
