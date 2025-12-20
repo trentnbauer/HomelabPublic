@@ -19,7 +19,7 @@ services:
     labels:
       - autoheal=true
       - dockflare.0.access.enable=true
-      - dockflare.0.accesshostname=${SUBDOMAIN}${DOMAIN}
+      - dockflare.0.access.hostname=${SUBDOMAIN}${DOMAIN}
       - dockflare.0.access.service=http://${HOSTNAME:-localhost}:${WEBPORT:-5055}
       - dockflare.0.access.access.policy=${CFPOLICY:-authenticate}
       - dockflare.0.access.name=${CFACCESSNAME:-Overseerr}
@@ -33,5 +33,6 @@ services:
 volumes:
   app:
   #www:
+
 
 
