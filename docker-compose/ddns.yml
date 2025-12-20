@@ -11,6 +11,7 @@ services:
       - CLOUDFLARE_API_TOKEN=${CF_APIKEY}   # Your Cloudflare API token
       - DOMAINS=${DOMAINS}                  # Your domains (separated by commas)
       - PROXIED=${PROXIED-false}            # Tell Cloudflare to cache webpages and hide your IP (optional)
+      - DETECTION_TIMEOUT=15s               # Resolves and potential latency issues
     logging:
       driver: "json-file"
       options:
