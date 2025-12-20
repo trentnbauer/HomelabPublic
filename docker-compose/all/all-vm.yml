@@ -98,8 +98,9 @@ services:
       - CLEANUP_INTERVAL_SECONDS=900
       - SCAN_ALL_NETWORKS=true
       - MAX_CONCURRENT_DNS_OPS=2
-      - DOCKFLARE_PASSWORD=${DOCKFLARE_PASSWORD}
-      - SECRET_KEY=${DOCKFLARE_KEY}
+      - DISABLE_PASSWORD_LOGIN=true
+      #- DOCKFLARE_PASSWORD=${DOCKFLARE_PASSWORD}
+      #- SECRET_KEY=${DOCKFLARE_KEY}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - dockflare:/app/data
