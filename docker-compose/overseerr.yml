@@ -18,13 +18,13 @@ services:
       start_period: 30s
     labels:
       - autoheal=true
-      - dockflare.0.access.enable=true
-      - dockflare.0.access.hostname=${SUBDOMAIN}${DOMAIN}
-      - dockflare.0.access.service=http://${HOSTNAME:-localhost}:${WEBPORT:-5055}
-      - dockflare.0.access.access.policy=${CFPOLICY:-authenticate}
-      - dockflare.0.access.name=${CFACCESSNAME:-Overseerr}
-      - dockflare.0.access.zonename=${DOMAIN}
-      - dockflare.0.access.path=${URLPATH:-}
+      - cloudflare.tunnel.enable=true
+      - cloudflare.tunnel.hostname=${SUBDOMAIN}${DOMAIN}
+      - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${WEBPORT:-5055}
+      - cloudflare.tunnel.access.policy=${CFPOLICY:-authenticate}
+      - cloudflare.tunnel.name=${CFACCESSNAME:-Overseerr}
+      - cloudflare.tunnel.zonename=${DOMAIN}
+      - cloudflare.tunnel.path=${URLPATH:-}
     logging:
       driver: "json-file"
       options:
@@ -33,6 +33,7 @@ services:
 volumes:
   app:
   #www:
+
 
 
 
