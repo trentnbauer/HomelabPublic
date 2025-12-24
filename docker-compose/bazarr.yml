@@ -9,7 +9,8 @@ services:
       start_period: 30s
       timeout: 20s
     environment:
-      - TZ=Australia/Melbourne
+      - TZ=${TZ:-Australia/Melbourne}
+      - Host=$${HOSTNAME}
     volumes:
       - config:/config
       - media:/media
