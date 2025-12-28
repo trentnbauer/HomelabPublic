@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   app:
-    image: ghcr.io/hargata/lubelogger:v1.5.5@sha256:9fce15cb8c96e5ad36b0dc810b63caf083bb2d66fa2cb6cfb5152bf97fc2a447
+    image: ghcr.io/hargata/lubelogger:v1.5.6@sha256:652d69da9c1f54ca15c833ae667e4030ca8fa1d50b1fda50e58172897a150e47
     restart: unless-stopped
     volumes:
       - data:/App/data
