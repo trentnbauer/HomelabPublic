@@ -29,14 +29,17 @@ services:
       - /tmp/pterodactyl/:/tmp/pterodactyl/
       - /srv/daemon-data/:/srv/daemon-data/
       - logs:/app/storage/logs/ #Laravel log files
-#    healthcheck:
+#########################################################################
+# HEALTH CHECK PENDING https://github.com/pterodactyl/panel/issues/4521 #
+#########################################################################   
+#    healthcheck:  
 #      test: [ "CMD", "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health" ]
 #      interval: 15s
 #      timeout: 3s
 #      retries: 5
 #      start_period: 30s
     labels:
-#      - autoheal=true
+      - autoheal=true
       - cloudflare.tunnel.enable=true
       - cloudflare.tunnel.hostname=${CFSUBDOMAIN}${CFDOMAIN}
       - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${PORT:-443}
@@ -44,7 +47,6 @@ services:
       - cloudflare.tunnel.name=${CFACCESSNAME:-Pterodactyl Wings}
       - cloudflare.tunnel.session_duration=${CFDURATION:-4h}
       - cloudflare.tunnel.zonename=${CFDOMAIN}
-      - cloudflare.tunnel.path=${CFURLPATH:-}
 
   db:
     image: mariadb:12.1
