@@ -100,7 +100,7 @@ services:
       - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - dockflaretest:/app/data
+      - dockflare:/app/data
     labels:
       - autoheal=true
       - dockflare.enable=true
@@ -131,5 +131,5 @@ services:
       #- cloudflare.tunnel.path=${URLPATH:-}
 
 volumes:
-  dockflaretest:
+  dockflare:
   portacker:
