@@ -2,6 +2,15 @@ version: '2.3'
 services:
   app:
     image: ghcr.io/linuxserver/plex:1.42.2@sha256:1720efa8e919a724ff3003cce7c1c0ae91a54e097ca3c8f6713a780c6fd73432
+    deploy:
+      resources:
+        limits:
+          cpus: ${CPULIMIT:-1}
+        #reservations:
+        #  devices:
+        #  - driver: nvidia
+        #    count: all
+        #    capabilities: [gpu]
     network_mode: host ###Leave this as it may detect your LAN traffic as WAN, forcing encoding. It may also run into issues if your internert is down
     ports:
       - ${PLEXPORT:-32400}:32400
@@ -22,7 +31,7 @@ services:
       #- PUID=1000
       #- PGID=1000
       - VERSION=docker
-      - PLEX_CLAIM=$PLEX_CLAIM
+      - PLEX_CLAIM=${PLEX_CLAIM}
       - NVIDIA_VISIBLE_DEVICES=ALL
     runtime: nvidia
     volumes:
@@ -37,7 +46,7 @@ services:
       retries: 3
       start_period: 30s
     labels:
-      - "autoheal=true"
+      - autoheal=true
     logging:
       driver: "json-file"
       options:
@@ -51,4 +60,5 @@ volumes:
       type: nfs 
       o: $STORAGE,nfsvers=4
       device: :$MEDIA
+
 
