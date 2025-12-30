@@ -12,14 +12,18 @@ services:
     labels:
       - autoheal=true
       - dockflare.enable=${CFTUNNEL:-true}
+      ### PUBLIC UI
       - dockflare.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
       - dockflare.0.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
       - dockflare.0.access.policy=public
+      - dockflare.0.name=Wizarr Public
       - dockflare.0.zonename=${CFDOMAIN}
       - dockflare.0.path=${CFURLPATH:-}
+      ### ADMIN UI
       - dockflare.1.hostname=${CFSUBDOMAIN}${CFDOMAIN}
       - dockflare.1.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
       - dockflare.1.access.policy=${CFPOLICY:-default_tld}
+      - dockflare.1.name=Wizarr Admin
       - dockflare.1.zonename=${CFDOMAIN}
       - dockflare.1.path=${CFURLPATH:-}/login ## Secure the Admin side of the app
     healthcheck:
