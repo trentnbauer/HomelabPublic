@@ -60,10 +60,6 @@ services:
             
   nodeA:
     image: ghcr.io/haveagitgat/tdarr_node:2.58.02
-    deploy:
-      resources:
-        limits:
-          cpus: ${CPULIMIT:-1}
     restart: unless-stopped
     network_mode: service:server
     environment:
@@ -97,6 +93,8 @@ services:
         max-file: "3" 
     deploy:
       resources:
+        limits:
+          cpus: ${CPULIMIT:-1}
         reservations:
           devices:
           - driver: nvidia
