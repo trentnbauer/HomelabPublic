@@ -28,6 +28,7 @@ services:
       - media:/media
       - /cache:/temp
       - /etc/hostname:/etc/hostname:ro
+      - plugins:/app/Tdarr_Node/assets/app/plugins
     devices:
       - /dev/dri:/dev/dri
     healthcheck:
@@ -79,6 +80,7 @@ services:
       - media:/media
       - /cache:/temp
       - /etc/hostname:/etc/hostname:ro
+      - plugins:/app/Tdarr_Node/assets/app/plugins
     devices:
       - /dev/dri:/dev/dri
     logging:
@@ -97,6 +99,7 @@ volumes:
   server:
   configs:
   logs:
+  plugins:
   media:
     driver_opts:
       type: "nfs"
