@@ -18,20 +18,14 @@ services:
       - dockflare.0.access.policy=bypass
       - dockflare.0.name=Wizarr Public
       - dockflare.0.zonename=${CFDOMAIN}
-      - dockflare.0.path=${CFURLPATH:-}
+      - dockflare.0.path=${CFURLPATH:-}/j
+      ### ADMIN UI
       - dockflare.1.hostname=${CFSUBDOMAIN}${CFDOMAIN}
       - dockflare.1.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
-      - dockflare.1.access.policy=bypass
-      - dockflare.1.name=Wizarr Public
+      - dockflare.1.access.policy=${CFPOLICY:-default_tld}
+      - dockflare.1.name=Wizarr Admin
       - dockflare.1.zonename=${CFDOMAIN}
-      - dockflare.1.path=${CFURLPATH:-}/j
-      ### ADMIN UI
-      - dockflare.2.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - dockflare.2.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
-      - dockflare.2.access.policy=${CFPOLICY:-default_tld}
-      - dockflare.2.name=Wizarr Admin
-      - dockflare.2.zonename=${CFDOMAIN}
-      - dockflare.2.path=${CFURLPATH:-}/login ## Secure the Admin side of the app
+      - dockflare.1.path=${CFURLPATH:-}/login ## Secure the Admin side of the app
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:5690
       interval: 30s
