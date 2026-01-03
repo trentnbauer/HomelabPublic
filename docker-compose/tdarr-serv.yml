@@ -28,15 +28,14 @@ services:
       - media:/media
       - /cache:/temp
       - /etc/hostname:/etc/hostname:ro
-      #- plugins:/app/Tdarr_Node/assets/app/plugins
     devices:
       - /dev/dri:/dev/dri
     healthcheck:
-      test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:8265
-      interval: 60s
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8265/"]
+      interval: 1m
+      timeout: 10s
       retries: 3
-      start_period: 1m30s
-      timeout: 55s
+      start_period: 60s
     labels:
       - autoheal=true
       - dockflare.enable=${CFTUNNEL:-true}
@@ -51,6 +50,11 @@ services:
         max-size: "10m"
         max-file: "3" 
     deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 90s
+        max_attempts: 3
+        window: 120s
       resources:
         reservations:
           devices:
@@ -80,10 +84,15 @@ services:
       - media:/media
       - /cache:/temp
       - /etc/hostname:/etc/hostname:ro
-      #- plugins:/app/Tdarr_Node/assets/app/plugins
     depends_on:
           server:
             condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8265/"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     devices:
       - /dev/dri:/dev/dri
     logging:
@@ -92,6 +101,11 @@ services:
         max-size: "10m"
         max-file: "3" 
     deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 90s
+        max_attempts: 3
+        window: 120s
       resources:
         limits:
           cpus: ${CPULIMIT:-1}
@@ -104,7 +118,6 @@ volumes:
   server:
   configs:
   logs:
-  #plugins:
   media:
     driver_opts:
       type: "nfs"
