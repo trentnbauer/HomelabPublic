@@ -52,6 +52,8 @@ services:
         max-file: "3" 
     deploy:
       resources:
+        limits:
+          cpus: ${CPULIMIT:-1}
         reservations:
           devices:
           - driver: nvidia
