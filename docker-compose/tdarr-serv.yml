@@ -108,7 +108,8 @@ services:
         window: 120s
       resources:
         limits:
-          cpus: ${CPULIMIT:-1}
+          cpus: ${CPULIMIT:-2}
+          memory: ${RAMLIMIT:-2G}
         reservations:
           devices:
           - driver: nvidia
