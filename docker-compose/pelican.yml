@@ -1,0 +1,310 @@
+services:
+  panel:
+    image: ghcr.io/pelican-dev/panel:v1.0.0-beta30@sha256:aec08833e40b54e773cae68945d81f42561d176244032e33c152a92ebd0e0deb
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${PANEL_CPULIMIT:-2}
+          #memory: 50M
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+      cache:
+        condition: service_healthy
+        restart: true
+    restart: unless-stopped
+    networks:
+      Management:
+        aliases:
+          - panel
+    ports:
+       - ${PELICAN_PORT:-80}:80 # if you are behind a proxy uncomment this line and comment out 80 and 443
+       - "9000:9000" # enable when not using caddy to be able to reach php-fpm
+    volumes:
+      - pelican-data:/pelican-data
+      - pelican-logs:/var/www/html/storage/logs
+    environment:
+      TZ: ${TZ:-UTC}
+      APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
+      #LE_EMAIL: "USEYOUROWNEMAILHERE@example.com" # email to be used for let's encrypt certificates
+      APP_DEBUG: ${DEBUG:-false}
+      APP_ENV: "production"
+      APP_LOCALE: ${LOCALE:-en}
+      BEHIND_PROXY: true
+      TRUSTED_PROXIES: ${CF_TUNNEL_IP:-"*"}
+      DB_CONNECTION: "mariadb"
+      DB_HOST: "database"
+      DB_PORT: "3306"
+      DB_DATABASE: "pelican"
+      MYSQL_DATABASE: "pelican"
+      DB_USERNAME: "pelican"
+      DB_PASSWORD: ${MYSQL_PASS}
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: cache
+      MAIL_DRIVER: ${MAIL_DRIVER:-smtp}
+      MAIL_HOST: ${MAIL_SERVER:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_SCHEME: ${MAIL_SCHEME:-TLS}
+      SKIP_CADDY: ${SKIP_CADDY:-false} # enable when not using caddy.
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    labels:
+      - dockflare.enable=true
+      - dockflare.0.hostname=${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
+      - dockflare.0.service=http://panel:80
+      - dockflare.0.access.policy=bypass
+      - dockflare.0.zonename=${DOMAIN}
+      - AutohealPelican=true
+
+  wings:
+    image: ghcr.io/pelican-dev/wings:v1.0.0-beta21@sha256:a610344756975ef0f37edc602be26a0656f376b187c84cef7fcc673923a8cc59
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 999
+        window: 30s
+      resources:
+        limits:
+          cpus: ${WINGS_CPULIMIT:-2}
+          #memory: 50M
+    restart: unless-stopped
+    networks:
+      Management:
+        aliases:
+          - wings
+      wings:
+        aliases:
+          - wings
+    ports:
+      - ${WINGS_PORT:-443}:443
+      - ${SFTP_PORT:-2022}:2022
+    tty: true
+    environment:
+      APP_DEBUG: ${DEBUG:-false}
+      TZ: ${TZ:-UTC}
+      #WINGS_UID: 988
+      #WINGS_GID: 988
+      WINGS_USERNAME: pelican
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/
+      - wings-config:/etc/pelican/
+      - /var/lib/pelican/:/var/lib/pelican/
+      - wings-logs:/var/log/pelican/
+      - wings-temp:/tmp/pelican/
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - wings-data:/srv/daemon-data/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    labels:
+      - dockflare.enable=true
+      - dockflare.0.hostname=${WINGS_SUBDOMAIN:-wings}.${DOMAIN}
+      - dockflare.0.service=http://wings:443
+      - dockflare.0.access.policy=bypass
+      - dockflare.0.zonename=${DOMAIN}
+      - AutohealPelican=true
+
+  database:
+    image: mariadb:10.11
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      Management:
+        aliases:
+          - database
+      wings:
+        aliases:
+          - database
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+      MYSQL_DATABASE: "pelican"
+      MYSQL_USER: "pelican"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    labels:
+      - AutohealPelican=true
+
+  cache:
+    image: redis:alpine
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      Management:
+        aliases:
+          - cache
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"] # Command to execute the health check
+      interval: 10s                      # How often to run the check
+      timeout: 5s                        # Maximum time for the command to run
+      retries: 3                         # Number of consecutive failures to consider "unhealthy"
+      start_period: 15s                  # Grace period for the container to start up
+    labels:
+      - AutohealPelican=true
+
+  dockflare:
+    image: alplat/dockflare:v2.0.4 #DO NOT CHANGE - NEWER VERSIONS REQUIRE CONFIGURATION IN WEB UI
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${DOCKFLARE_CPULIMIT:-0.50}
+          #memory: 50M
+    networks:
+      Management:
+        aliases:
+          - dockflare
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5000 -O /dev/null || exit 1
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 20s 
+    ports:
+      - ${DOCKFLARE_PORT:-5000}:5000
+    environment:
+      - TUNNEL_NAME=Pelican
+      - CLOUDFLARED_NETWORK_NAME=pelican-mgmt
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
+      - TZ=${TZ:-UTC}
+      - CF_API_TOKEN=${CF_APITOKEN}
+      - CF_ACCOUNT_ID=${CF_ACCOUNTID}
+      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=5
+      - SYNC_ALL_CLOUDFLARE_POLICIES=true
+      - TZ=${TZ:-Australia/Melbourne}
+      - GRACE_PERIOD_SECONDS=3600
+      - CLEANUP_INTERVAL_SECONDS=1800
+      - SCAN_ALL_NETWORKS=false
+      - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - dockflare:/app/data
+    labels:
+      - AutohealPelican=true
+
+      
+  ddns-play:
+    image: favonia/cloudflare-ddns:1.15.1
+    depends_on:
+      wings:
+        condition: service_started
+        restart: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: 0.50
+          #memory: 50M
+    networks:
+      - Management
+    restart: always
+    user: "1000:1000"
+    read_only: true 
+    cap_drop: [all] 
+    security_opt: [no-new-privileges:true] 
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CF_APITOKEN}         # Your Cloudflare API token
+      - DOMAINS=${JOIN_SUBDOMAIN:-play}.${DOMAIN} # Subdomain that players will use to join your game servers
+      - PROXIED=${PROXIED-false}                  # Tell Cloudflare to cache webpages and hide your IP (optional)
+      - DETECTION_TIMEOUT=15s                     # Resolves and potential latency issues
+      - UPDATE_CRON=@every ${UPDATE_CRON:-5m}     # how often to update
+      - DELETE_ON_STOP=${DELETE_ON_STOP:-false}   # delete the DDNS record when stopping the container
+      - UPDATE_ON_START=${UPDATE_ON_START:-true}  # update DDNS when the container starts
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    labels:
+      - AutohealPelican=true
+      
+  autoheal:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: AutohealPelican
+      AUTOHEAL_INTERVAL: 60
+      AUTOHEAL_START_PERIOD: 240
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
+      WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
+    image: willfarrell/autoheal@sha256:6d180d1b980a6b04362fdd8f8218ada170cdf5e00ce7fa825c9655bd4be631d0
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      
+volumes:
+  pelican-data:
+  wings-data:
+  wings-temp:
+  wings-config:
+  pelican-logs:
+  wings-logs:
+  db:
+  dockflare:
+
+networks:
+  Management:
+    name: pelican-mgmt
+  wings:
+    name: pelican_nw
