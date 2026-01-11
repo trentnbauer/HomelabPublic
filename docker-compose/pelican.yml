@@ -67,11 +67,11 @@ services:
         max-size: "5m"
         max-file: "3"
     labels:
-      - dockflare.enable=true
-      - dockflare.0.hostname=${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
-      - dockflare.0.service=http://panel:80
-      - dockflare.0.access.policy=bypass
-      - dockflare.0.zonename=${DOMAIN}
+      - pelicantunnel.enable=true
+      - pelicantunnel.0.hostname=${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
+      - pelicantunnel.0.service=http://panel:80
+      - pelicantunnel.0.access.policy=bypass
+      - pelicantunnel.0.zonename=${DOMAIN}
       - AutohealPelican=true
 
   wings:
@@ -116,11 +116,11 @@ services:
         max-size: "5m"
         max-file: "3"
     labels:
-      - dockflare.enable=true
-      - dockflare.0.hostname=${WINGS_SUBDOMAIN:-wings}.${DOMAIN}
-      - dockflare.0.service=http://wings:443
-      - dockflare.0.access.policy=bypass
-      - dockflare.0.zonename=${DOMAIN}
+      - pelicantunnel.enable=true
+      - pelicantunnel.0.hostname=${WINGS_SUBDOMAIN:-wings}.${DOMAIN}
+      - pelicantunnel.0.service=http://wings:443
+      - pelicantunnel.0.access.policy=bypass
+      - pelicantunnel.0.zonename=${DOMAIN}
       - AutohealPelican=true
 
   database:
@@ -216,7 +216,7 @@ services:
     environment:
       - TUNNEL_NAME=pelican
       - CLOUDFLARED_NETWORK_NAME=pelican-mgmt
-      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:2025.11.1
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:latest
       - TZ=${TZ:-UTC}
       - CF_API_TOKEN=${CF_APITOKEN}
       - CF_ACCOUNT_ID=${CF_ACCOUNTID}
@@ -227,11 +227,17 @@ services:
       - CLEANUP_INTERVAL_SECONDS=1800
       - SCAN_ALL_NETWORKS=false
       - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
+      - LABEL_PREFIX=pelicantunnel
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - dockflare:/app/data
     labels:
       - AutohealPelican=true
+      - pelicantunnel.enable=true
+      - pelicantunnel.0.hostname=${DOCKFLARE_SUBDOMAIN:-dockflare}.${DOMAIN}
+      - pelicantunnel.0.service=http://dockflare:5000
+      - pelicantunnel.0.access.policy=authenticate
+      - pelicantunnel.0.zonename=${DOMAIN}
 
       
   ddns-play:
@@ -307,7 +313,11 @@ networks:
     name: pelican-mgmt
     ipam:
        config:
-       - subnet: 192.168.254.0/24
-         gateway: 192.168.254.1
+       - subnet: 192.168.253.0/24
+         gateway: 192.168.253.1
   wings:
     name: pelican_nw
+    ipam:
+       config:
+       - subnet: 192.168.254.0/24
+         gateway: 192.168.254.1
