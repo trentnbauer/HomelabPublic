@@ -19,6 +19,12 @@ services:
         condition: service_started
         restart: true
     restart: unless-stopped
+    healthcheck:
+       test: wget --no-verbose --tries=1 --spider http://127.0.0.1/login || exit 1
+       interval: 30s
+       timeout: 25s
+       retries: 3
+       start_period: 30s
     networks:
       Management:
         aliases:
