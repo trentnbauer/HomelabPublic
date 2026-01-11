@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: ghcr.io/henrygd/beszel/beszel:0.17.0@sha256:31efe52431f576d09608bafc0c1f669629473a42739625d9238461eceeec6ced
+    image: ghcr.io/henrygd/beszel/beszel:0.18.0@sha256:5f5fe276bae04dced4866e201d4409d9a87a4a1e593993213212c4f1190816a4
     restart: unless-stopped
     ports:
       - ${PORT:-8090}:8090
