@@ -26,7 +26,7 @@ services:
     volumes:
       - pelican-data:/pelican-data
       - pelican-logs:/var/www/html/storage/logs
-      - /var/lib/pelican/plugins:/var/www/pelican/plugins
+      - pelican-plugins:/var/www/pelican/plugins
     environment:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
