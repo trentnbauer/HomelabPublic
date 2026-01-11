@@ -35,7 +35,7 @@ services:
       APP_ENV: production
       APP_LOCALE: ${LOCALE:-en}
       BEHIND_PROXY: true
-      TRUSTED_PROXIES: 127.0.0.1
+      TRUSTED_PROXIES: 192.168.254.0/24
       DB_CONNECTION: mariadb
       DB_HOST: database
       DB_PORT: 3306
@@ -300,5 +300,8 @@ volumes:
 networks:
   Management:
     name: pelican-mgmt
+     config:
+       - subnet: 192.168.254.0/24
+         gateway: 192.168.254.1
   wings:
     name: pelican_nw
