@@ -36,7 +36,7 @@ services:
     environment:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
-      APP_KEY: ${APP_KEY}  ### 32 character random password
+      #APP_KEY: ${APP_KEY}  ### 32 character random password
       APP_DEBUG: ${DEBUG:-false}
       APP_ENV: production
       APP_LOCALE: ${LOCALE:-en}
