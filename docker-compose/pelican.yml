@@ -1,6 +1,7 @@
 services:
   panel:
     image: ghcr.io/pelican-dev/panel:v1.0.0-beta30@sha256:aec08833e40b54e773cae68945d81f42561d176244032e33c152a92ebd0e0deb
+    command: php artisan p:environment:setup && php artisan migrate --force
     deploy:
       restart_policy:
         condition: on-failure
