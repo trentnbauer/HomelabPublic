@@ -52,7 +52,7 @@ services:
       MAIL_FROM: ${MAIL_FROM}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      MAIL_SCHEME: ${MAIL_SCHEME:-}
+      MAIL_SCHEME: ${MAIL_SCHEME:-SMTPS}
       SKIP_CADDY: ${SKIP_CADDY:-false} # enable when not using caddy.
     logging:
       driver: "json-file"
