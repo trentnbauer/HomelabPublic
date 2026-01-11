@@ -35,7 +35,7 @@ services:
       APP_ENV: production
       APP_LOCALE: ${LOCALE:-en}
       BEHIND_PROXY: true
-      TRUSTED_PROXIES: '*'
+      #TRUSTED_PROXIES: '*'
       DB_CONNECTION: mariadb
       DB_HOST: database
       DB_PORT: 3306
