@@ -101,8 +101,8 @@ services:
       - /var/lib/docker/containers/:/var/lib/docker/containers/
       - /etc/pelican/:/etc/pelican/
       - /var/lib/pelican/:/var/lib/pelican/
-      - wings-logs:/var/log/pelican/
-      - wings-temp:/tmp/pelican/
+      - /var/log/pelican/:/var/log/pelican/
+      - /tmp/pelican/:/tmp/pelican/
     logging:
       driver: "json-file"
       options:
@@ -290,10 +290,8 @@ services:
 volumes:
   pelican-data:
   wings-data:
-  wings-temp:
   wings-config:
   pelican-logs:
-  wings-logs:
   db:
   dockflare:
 
