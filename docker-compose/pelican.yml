@@ -300,7 +300,8 @@ volumes:
 networks:
   Management:
     name: pelican-mgmt
-     config:
+    ipam:
+       config:
        - subnet: 192.168.254.0/24
          gateway: 192.168.254.1
   wings:
