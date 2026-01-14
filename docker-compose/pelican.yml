@@ -218,15 +218,13 @@ services:
       - TUNNEL_NAME=pelican
       - CLOUDFLARED_NETWORK_NAME=pelican-mgmt
       - CLOUDFLARED_IMAGE=cloudflare/cloudflared:latest
-      - TZ=${TZ:-UTC}
       - CF_API_TOKEN=${CF_APITOKEN}
       - CF_ACCOUNT_ID=${CF_ACCOUNTID}
       - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=5
-      - SYNC_ALL_CLOUDFLARE_POLICIES=true
       - TZ=${TZ:-Australia/Melbourne}
       - GRACE_PERIOD_SECONDS=3600
       - CLEANUP_INTERVAL_SECONDS=1800
-      - SCAN_ALL_NETWORKS=false
+      #- SCAN_ALL_NETWORKS=false
       - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
       - LABEL_PREFIX=pelicantunnel
     volumes:
