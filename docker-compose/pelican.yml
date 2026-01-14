@@ -11,7 +11,7 @@ services:
         window: 120s
       resources:
         limits:
-          cpus: ${PANEL_CPULIMIT:-2}
+          cpus: ${PANEL_CPULIMIT:-4}
           #memory: 50M
     depends_on:
       database:
@@ -89,7 +89,7 @@ services:
         window: 30s
       resources:
         limits:
-          cpus: ${WINGS_CPULIMIT:-2}
+          cpus: ${WINGS_CPULIMIT:-4}
           #memory: 50M
     restart: unless-stopped
     networks:
