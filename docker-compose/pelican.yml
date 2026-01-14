@@ -35,7 +35,7 @@ services:
     environment:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
-      #APP_NAME: ${APP_NAME:-Pelican}
+      APP_NAME: ${APP_NAME:-Pelican}
       #APP_KEY: ${APP_KEY}  ### 32 character random password
       APP_DEBUG: ${DEBUG:-false}
       APP_ENV: production
@@ -57,6 +57,7 @@ services:
       MAIL_HOST: ${MAIL_SERVER:-smtp.gmail.com}
       MAIL_PORT: ${MAIL_PORT:-465}
       MAIL_FROM: ${MAIL_FROM}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Pelican}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       MAIL_SCHEME: ${MAIL_SCHEME:-smtps}
