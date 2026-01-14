@@ -38,7 +38,7 @@ services:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
       APP_NAME: ${APP_NAME:-Pelican}
-      #APP_KEY: ${APP_KEY}  ### 32 character random password
+      APP_KEY: ${APP_KEY}  ### 32 character random password
       APP_DEBUG: ${DEBUG:-false}
       APP_ENV: production
       APP_LOCALE: ${LOCALE:-en}
@@ -109,6 +109,7 @@ services:
       #WINGS_UID: 988
       #WINGS_GID: 988
       WINGS_USERNAME: pelican
+      APP_KEY: ${APP_KEY}  ### 32 character random password
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/containers/:/var/lib/docker/containers/
