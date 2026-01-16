@@ -50,15 +50,16 @@ services:
         max-file: "3" 
     labels:
       - autoheal=true
-      - dockflare.enable=${CFTUNNEL:-true}
-      - dockflare.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${WEBPORT:-7476}
-      - dockflare.0.access.policy=${CFPOLICY:-default_tld} #default_tld, authenticate, bypass
-      - dockflare.0.zonename=${CFDOMAIN}
-      - dockflare.0.path=${CFURLPATH:-}
+      - dfgeneric.enable=${CFTUNNEL:-true}
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME:-localhost}:${WEBPORT:-7476}
+      - dfgeneric.0.access.policy=${CFPOLICY:-default_tld} #default_tld, authenticate, bypass
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}
       
        
 volumes:
   config:
   data:
   qui:
+
