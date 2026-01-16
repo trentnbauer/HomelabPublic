@@ -13,12 +13,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     labels:
-      - cloudflare.tunnel.enable=true
-      - cloudflare.tunnel.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - cloudflare.tunnel.service=HTTP://${HOSTNAME:-localhost}:${PORT:-3052}
-      - cloudflare.tunnel.access.policy=${CFPOLICY:-default_tld}
-      - cloudflare.tunnel.zonename=${CFDOMAIN}
-      - cloudflare.tunnel.path=${CFURLPATH:-}   
+      - dfgeneric.enable=true
+      - dfgeneric.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.service=HTTP://${HOSTNAME:-localhost}:${PORT:-3052}
+      - dfgeneric.access.policy=${CFPOLICY:-default_tld}
+      - dfgeneric.zonename=${CFDOMAIN}
+      - dfgeneric.path=${CFURLPATH:-}   
     logging:
       driver: "json-file"
       options:
@@ -27,3 +27,4 @@ services:
 
 volumes:
   data:
+
