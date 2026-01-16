@@ -85,14 +85,14 @@ services:
       start_period: 30s
     labels:
       - autoheal=true
-      - cloudflare.tunnel.enable=true
-      - cloudflare.tunnel.hostname=${SUBDOMAIN}${DOMAIN}
-      - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${PORT_HTTP:-80}
-      - cloudflare.tunnel.access.policy=${CFPOLICY:-bypass}
-      - cloudflare.tunnel.name=${CFACCESSNAME:-Pterodactyl Panel}
-      - cloudflare.tunnel.session_duration=${CFDURATION:-4h}
-      - cloudflare.tunnel.zonename=${DOMAIN}
-      - cloudflare.tunnel.path=${URLPATH:-}
+      - dfgeneric.enable=true
+      - dfgeneric.hostname=${SUBDOMAIN}${DOMAIN}
+      - dfgeneric.service=http://${HOSTNAME:-localhost}:${PORT_HTTP:-80}
+      - dfgeneric.access.policy=${CFPOLICY:-bypass}
+      - dfgeneric.name=${CFACCESSNAME:-Pterodactyl Panel}
+      - dfgeneric.session_duration=${CFDURATION:-4h}
+      - dfgeneric.zonename=${DOMAIN}
+      - dfgeneric.path=${URLPATH:-}
     logging:
       driver: "json-file"
       options:
@@ -104,3 +104,4 @@ volumes:
   db:
   env:
   dbetc:
+
