@@ -194,7 +194,45 @@ services:
       start_period: 15s
     labels:
       - AutohealPelican=true
-
+  dockflare:
+    image: alplat/dockflare:v2.0.4
+    restart: unless-stopped
+    networks:
+      Management:
+        aliases:
+          - dockflare
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5000 -O /dev/null || exit 1
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 20s 
+    environment:
+      - TUNNEL_NAME=pelican
+      - LABEL_PREFIX=dfpelican
+      - CLOUDFLARED_NETWORK_NAME=pelican-mgmt
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:latest
+      - TZ=${TZ:-Australia/Melbourne}
+      - CF_API_TOKEN=${CF_APITOKEN}
+      - CF_ACCOUNT_ID=${CF_ACCOUNTID}
+      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=5
+      - SYNC_ALL_CLOUDFLARE_POLICIES=true
+      - TZ=${TZ:-UTC}
+      - GRACE_PERIOD_SECONDS=28800
+      - CLEANUP_INTERVAL_SECONDS=900
+      - SCAN_ALL_NETWORKS=false
+      - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - dockflare:/app/data
+    labels:
+      - autoheal=true
+      - dockflare.enable=true
+      - dockflare.0.hostname=dockflare.${domain}
+      - dockflare.0.service=http://dockflare:${DOCKLAREPORT:-5000}
+      - dockflare.0.access.policy=default_tld
+      - dockflare.0.zonename=${URLTLD}
+      #- cloudflare.tunnel.path=${URLPATH:-}
   ddns-play:
     image: favonia/cloudflare-ddns:1.15.1
     depends_on:
