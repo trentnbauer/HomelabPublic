@@ -72,11 +72,11 @@ services:
         max-size: "5m"
         max-file: "3"
     labels:
-      - dfgeneric.enable=true
-      - dfgeneric.0.hostname=${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
-      - dfgeneric.0.service=http://${HOST:-localhost}:${PANEL_PORT:-80}
-      - dfgeneric.0.access.policy=bypass
-      - dfgeneric.0.zonename=${DOMAIN}
+      - dfpelican.enable=true
+      - dfpelican.0.hostname=${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
+      - dfpelican.0.service=http://${HOST:-localhost}:${PANEL_PORT:-80}
+      - dfpelican.0.access.policy=bypass
+      - dfpelican.0.zonename=${DOMAIN}
       - AutohealPelican=true
 
   wings:
@@ -123,11 +123,11 @@ services:
         max-size: "5m"
         max-file: "3"
     labels:
-      - dfgeneric.enable=true
-      - dfgeneric.0.hostname=${WINGS_SUBDOMAIN:-wings}.${DOMAIN}
-      - dfgeneric.0.service=http://${HOST:-localhost}:${WINGS_PORT:-443}
-      - dfgeneric.0.access.policy=bypass
-      - dfgeneric.0.zonename=${DOMAIN}
+      - dfpelican.enable=true
+      - dfpelican.0.hostname=${WINGS_SUBDOMAIN:-wings}.${DOMAIN}
+      - dfpelican.0.service=http://${HOST:-localhost}:${WINGS_PORT:-443}
+      - dfpelican.0.access.policy=bypass
+      - dfpelican.0.zonename=${DOMAIN}
       - AutohealPelican=true
 
   database:
@@ -227,12 +227,12 @@ services:
       - dockflare:/app/data
     labels:
       - autoheal=true
-      - dockflare.enable=true
-      - dockflare.0.hostname=dockflare.${domain}
-      - dockflare.0.service=http://dockflare:${DOCKLAREPORT:-5000}
-      - dockflare.0.access.policy=default_tld
-      - dockflare.0.zonename=${URLTLD}
-      #- dfgeneric.path=${URLPATH:-}
+      - dfpelican.enable=true
+      - dfpelican.0.hostname=dockflare.${domain}
+      - dfpelican.0.service=http://dockflare:${DOCKLAREPORT:-5000}
+      - dfpelican.0.access.policy=default_tld
+      - dfpelican.0.zonename=${URLTLD}
+      #- dfpelican.path=${URLPATH:-}
   ddns-play:
     image: favonia/cloudflare-ddns:1.15.1
     depends_on:
