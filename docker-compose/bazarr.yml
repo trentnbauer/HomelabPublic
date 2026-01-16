@@ -23,12 +23,12 @@ services:
         max-file: "3" 
     labels:
       - autoheal=true
-      - dockflare.enable=${CFTUNNEL:-true}
-      - dockflare.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - dockflare.0.service=http://${HOSTNAME}:${WEBPORT:-6767}
-      - dockflare.0.access.policy=${CFPOLICY:-default_tld}
-      - dockflare.0.zonename=${CFDOMAIN}
-      - dockflare.0.path=${CFURLPATH:-}
+      - dfgeneric.enable=${CFTUNNEL:-true}
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME}:${WEBPORT:-6767}
+      - dfgeneric.0.access.policy=${CFPOLICY:-default_tld}
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}
 volumes:
   config:
   media:
@@ -36,3 +36,4 @@ volumes:
       type: "nfs"
       o: addr=$MEDIASERV,nfsvers=4
       device: $MEDIAPATH
+
