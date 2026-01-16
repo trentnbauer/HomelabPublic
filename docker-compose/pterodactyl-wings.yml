@@ -40,13 +40,13 @@ services:
 #      start_period: 30s
     labels:
       - autoheal=true
-      - cloudflare.tunnel.enable=true
-      - cloudflare.tunnel.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${PORT:-443}
-      - cloudflare.tunnel.access.policy=${CFPOLICY:-bypass}
-      - cloudflare.tunnel.name=${CFACCESSNAME:-Pterodactyl Wings}
-      - cloudflare.tunnel.session_duration=${CFDURATION:-4h}
-      - cloudflare.tunnel.zonename=${CFDOMAIN}
+      - dfgeneric.enable=true
+      - dfgeneric.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.service=http://${HOSTNAME:-localhost}:${PORT:-443}
+      - dfgeneric.access.policy=${CFPOLICY:-bypass}
+      - dfgeneric.name=${CFACCESSNAME:-Pterodactyl Wings}
+      - dfgeneric.session_duration=${CFDURATION:-4h}
+      - dfgeneric.zonename=${CFDOMAIN}
 
   db:
     image: mariadb:12.1
@@ -91,5 +91,6 @@ volumes:
   daemon:
   db:
   logs:
+
 
 
