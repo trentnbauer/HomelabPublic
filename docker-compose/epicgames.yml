@@ -24,11 +24,11 @@ services:
       - LOCAL_TUNNEL=${LOCAL_TUNNEL:-false}
     mem_limit: 2G
     labels:
-      - cloudflare.tunnel.enable=true
-      - cloudflare.tunnel.hostname=${RECIPIENT_NAME}-egf.${DOMAIN}
-      - cloudflare.tunnel.service=http://${HOSTNAME:-localhost}:${WEBPORT:-3000}
-      - cloudflare.tunnel.access.policy=${CFPOLICY:-bypass}
-      - cloudflare.tunnel.zonename=${DOMAIN}
+      - dfgeneric.enable=true
+      - dfgeneric.hostname=${RECIPIENT_NAME}-egf.${DOMAIN}
+      - dfgeneric.service=http://${HOSTNAME:-localhost}:${WEBPORT:-3000}
+      - dfgeneric.access.policy=${CFPOLICY:-bypass}
+      - dfgeneric.zonename=${DOMAIN}
     logging:
       driver: "json-file"
       options:
@@ -49,6 +49,7 @@ volumes:
 #SUBDOMAIN=
 #DOMAIN=
 #HOSTNAME=
+
 
 
 
