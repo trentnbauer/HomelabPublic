@@ -109,7 +109,7 @@ services:
       - dockflare.0.service=http://${HOSTNAME_FQDN:-localhost}:${DOCKLAREPORT:-5000}
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=${URLTLD}
-      #- cloudflare.tunnel.path=${URLPATH:-}
+      #- dfgeneric.path=${URLPATH:-}
       
   portracker:
     image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
@@ -129,8 +129,9 @@ services:
       - dockflare.0.service=http://${HOSTNAME_FQDN:-localhost}:${PORTACKERPORT:-4999}
       - dockflare.0.access.policy=default_tld
       - dockflare.0.zonename=${URLTLD}
-      #- cloudflare.tunnel.path=${URLPATH:-}
+      #- dfgeneric.path=${URLPATH:-}
 
 volumes:
   dockflare:
   portacker:
+
