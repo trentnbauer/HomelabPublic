@@ -11,21 +11,21 @@ services:
     restart: unless-stopped
     labels:
       - autoheal=true
-      - dockflare.enable=${CFTUNNEL:-true}
+      - dfgeneric.enable=${CFTUNNEL:-true}
       ### PUBLIC UI
-      - dockflare.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - dockflare.0.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
-      - dockflare.0.access.policy=bypass
-      - dockflare.0.name=Wizarr Public
-      - dockflare.0.zonename=${CFDOMAIN}
-      - dockflare.0.path=${CFURLPATH:-}/j
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
+      - dfgeneric.0.access.policy=bypass
+      - dfgeneric.0.name=Wizarr Public
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}/j
       ### ADMIN UI
-      - dockflare.1.hostname=${CFSUBDOMAIN}${CFDOMAIN}
-      - dockflare.1.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
-      - dockflare.1.access.policy=${CFPOLICY:-default_tld}
-      - dockflare.1.name=Wizarr Admin
-      - dockflare.1.zonename=${CFDOMAIN}
-      - dockflare.1.path=${CFURLPATH:-}/login ## Secure the Admin side of the app
+      - dfgeneric.1.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.1.service=http://${HOSTNAME:-localhost}:${PORT:-5690}
+      - dfgeneric.1.access.policy=${CFPOLICY:-default_tld}
+      - dfgeneric.1.name=Wizarr Admin
+      - dfgeneric.1.zonename=${CFDOMAIN}
+      - dfgeneric.1.path=${CFURLPATH:-}/login ## Secure the Admin side of the app
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:5690
       interval: 30s
@@ -43,3 +43,4 @@ services:
 volumes:
   db:
   steps:
+
