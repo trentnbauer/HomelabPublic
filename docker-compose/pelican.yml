@@ -226,7 +226,7 @@ services:
     labels:
       - AutohealPelican=true
       - dfpelican.enable=true
-      - dfpelican.0.hostname=dockflare.${DOMAIN}
+      - dfpelican.0.hostname=${DOCKFLARE_SUBDOMAIN:-dockflare}.${DOMAIN}
       - dfpelican.0.service=http://dockflare:${DOCKLAREPORT:-5000}
       - dfpelican.0.access.policy=default_tld
       - dfpelican.0.zonename=${DOMAIN}
