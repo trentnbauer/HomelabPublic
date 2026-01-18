@@ -319,7 +319,7 @@ services:
              mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
              wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
              wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml &&
-             wget -q0 /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer-docker.yaml https://github.com/crowdsecurity/cs-cloudflare-bouncer/blob/main/config/crowdsec-cloudflare-bouncer-docker.yaml"
+             wget -q0 /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer-docker.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/refs/heads/main/crowdsec/crowdsec-cloudflare-bouncer.yaml"
 
   crowdsec:
     image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
