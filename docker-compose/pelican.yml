@@ -227,7 +227,7 @@ services:
       - AutohealPelican=true
       - dfpelican.enable=true
       - dfpelican.0.hostname=${DOCKFLARE_SUBDOMAIN:-dockflare}.${DOMAIN}
-      - dfpelican.0.service=http://dockflare:${DOCKLAREPORT:-5000}
+      - dfpelican.0.service=http://dockflare:5000
       - dfpelican.0.access.policy=default_tld
       - dfpelican.0.zonename=${DOMAIN}
       
@@ -270,7 +270,7 @@ services:
     labels:
       - AutohealPelican=true
 
-  db_manager:
+  dbui:
     image: ghcr.io/jeliebig/adminer-autologin:4.8.1
     environment:
       - ADMINER_PLUGINS=login-env-vars
@@ -278,13 +278,14 @@ services:
       - ADMINER_SERVER=database
       - ADMINER_USERNAME=root
       - ADMINER_PASSWORD={MYSQL_ROOT_PASS}
-    networks:
-      - Management
+      Management:
+        aliases:
+          - dbui
     labels:
       - AutohealPelican=true
       - dfpelican.enable=true
       - dfpelican.0.hostname=${DB_SUBDOMAIN:-db}.${DOMAIN}
-      - dfpelican.0.service=http://dockflare:${DOCKLAREPORT:-5000}
+      - dfpelican.0.service=http://dbui:8080
       - dfpelican.0.access.policy=default_tld
       - dfpelican.0.zonename=${DOMAIN}
 
