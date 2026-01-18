@@ -279,7 +279,7 @@ services:
       - ADMINER_USERNAME=root
       - ADMINER_PASSWORD={MYSQL_ROOT_PASS}
     networks:
-      - pelican-mgmt
+      - Management
     labels:
       - AutohealPelican=true
       - dfpelican.enable=true
