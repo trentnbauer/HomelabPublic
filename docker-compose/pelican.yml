@@ -195,9 +195,15 @@ services:
   dockflare:
     image: alplat/dockflare:v2.0.4
     restart: unless-stopped
-    resources:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
         limits:
-          cpus: ${DOCKFLARE_CPULIMIT:-1}
+          cpus: ${DOCKFLARE_CPULIMIT:-2}
     networks:
       Management:
         aliases:
@@ -248,8 +254,7 @@ services:
         window: 120s
       resources:
         limits:
-          cpus: 0.50
-          #memory: 50M
+          cpus: 0.25
     networks:
       - Management
     restart: always
@@ -275,6 +280,15 @@ services:
 
   adminer:
     image: ghcr.io/jeliebig/adminer-autologin:4.8.1
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${ADMINER_CPULIMIT:-1}
     environment:
       - ADMINER_PLUGINS=login-env-vars
       - ADMINER_DRIVER=server
@@ -306,6 +320,15 @@ services:
 
   crowdsec:
     image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${CROWDSEC_CPULIMIT:-2}
     restart: unless-stopped
     ports:
       - ${CROWDSEC_PORT:-8080}:8080
@@ -330,6 +353,15 @@ services:
 
   crowdsec-bouncer:
     image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.34@sha256:ff1b5b0972ea0cfe39a4f10728effc38f6185a88b742fc4ad5a53d5dca80aca1
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${CROWDSEC_CPULIMIT:-2}
     restart: unless-stopped
     network_mode: host
     depends_on:
