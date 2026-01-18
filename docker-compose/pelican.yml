@@ -280,6 +280,8 @@ services:
 
   adminer:
     image: ghcr.io/jeliebig/adminer-autologin:4.8.1
+    ports:
+      - ${ADMINER_PORT:-8081}:8080
     deploy:
       restart_policy:
         condition: on-failure
@@ -301,10 +303,10 @@ services:
           - adminer
     labels:
       - AutohealPelican=true
-      - dfpelican.enable=true
+      - dfpelican.enable={$ADMINER_PROXY:-false}
       - dfpelican.0.hostname=${ADMINER_SUBDOMAIN:-db}.${DOMAIN}
       - dfpelican.0.service=http://adminer:8080
-      - dfpelican.0.access.policy=default_tld
+      - dfpelican.0.access.policy=${ADMINER_POLICY:-default_tld}
       - dfpelican.0.zonename=${DOMAIN}
 
   crowdsec-init:
@@ -338,7 +340,7 @@ services:
     environment:
       - COLLECTIONS=lourys/pterodactyl
       - BOUNCER_KEY_FIREWALL=${CROWDSEC_KEY:-my_super_secret_key_123}
-      - DISABLE_ONLINE_API=true
+      - DISABLE_ONLINE_API=false
     volumes:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
