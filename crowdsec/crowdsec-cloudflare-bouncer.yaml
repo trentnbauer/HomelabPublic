@@ -16,7 +16,7 @@ cloudflare_config:
     default_action: captcha
     zones:
     - actions: 
-      - managed_challenge # valid choices are either of managed_challenge, js_challenge, block
+      - captcha # valid choices are either of managed_challenge, js_challenge, block
       # zone_id:
     
 
