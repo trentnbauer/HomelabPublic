@@ -1,0 +1,4 @@
+filenames:
+  - /var/log/pelican/wings.log
+labels:
+  type: pterodactyl
