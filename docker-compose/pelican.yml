@@ -314,13 +314,12 @@ services:
     volumes:
       - crowdsec-config:/etc/crowdsec
       - bouncer-config:/etc/crowdsec/bouncers
-    # wget -q0 /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer-docker.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml
     command: >
       sh -c "apk add --no-cache wget ca-certificates &&
              mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
              wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
              wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml"      
+             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-worker-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml"
 
   crowdsec:
     image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
