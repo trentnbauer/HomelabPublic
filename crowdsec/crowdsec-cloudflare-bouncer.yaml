@@ -1,0 +1,34 @@
+# CrowdSec Config
+crowdsec_lapi_url: ${API_URL}
+crowdsec_lapi_key: ${API_KEY}
+crowdsec_update_frequency: 10s
+
+include_scenarios_containing: [] # ignore IPs banned for triggering scenarios not containing either of provided word EG ["http"]
+exclude_scenarios_containing: [] # ignore IPs banned for triggering scenarios containing either of provided word EG ["ssh", "smb"]
+only_include_decisions_from: [] #  only include IPs banned due to decisions orginating from provided sources. EG ["cscli", "crowdsec"]
+
+#Cloudflare Config. 
+cloudflare_config:
+  accounts: 
+  - id: 
+    token: 
+    ip_list_prefix: crowdsec
+    default_action: managed_challenge
+    zones:
+    - actions: 
+      - managed_challenge # valid choices are either of managed_challenge, js_challenge, block
+      zone_id:
+    
+
+  update_frequency: 30s # the frequency to update the cloudflare IP list 
+
+# Bouncer Config
+daemon: false
+log_mode: stdout
+log_dir: /var/log/ 
+log_level: info # valid choices are either debug, info, error 
+
+prometheus:
+  enabled: true
+  listen_addr: 127.0.0.1
+  listen_port: 2112
