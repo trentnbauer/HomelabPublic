@@ -321,7 +321,7 @@ services:
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     labels:
-      PelicanAutoheal=true
+      - PelicanAutoheal=true
     networks:
       Management:
 
