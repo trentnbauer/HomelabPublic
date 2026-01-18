@@ -9,7 +9,7 @@ services:
         window: 120s
       resources:
         limits:
-          cpus: ${PANEL_CPULIMIT:-4}
+          cpus: ${PANEL_CPULIMIT:-2}
           #memory: 50M
     depends_on:
       database:
@@ -87,7 +87,7 @@ services:
         window: 30s
       resources:
         limits:
-          cpus: ${WINGS_CPULIMIT:-4}
+          cpus: ${WINGS_CPULIMIT:-2}
           #memory: 50M
     restart: unless-stopped
     networks:
@@ -195,6 +195,9 @@ services:
   dockflare:
     image: alplat/dockflare:v2.0.4
     restart: unless-stopped
+      resources:
+        limits:
+          cpus: ${DOCKFLARE_CPULIMIT:-1}
     networks:
       Management:
         aliases:
@@ -278,6 +281,9 @@ services:
       - ADMINER_SERVER=database
       - ADMINER_USERNAME=pelican
       - ADMINER_PASSWORD=${MYSQL_PASS}
+      resources:
+        limits:
+          cpus: ${ADMINER_CPULIMIT:-1}
     networks:
       Management:
         aliases:
@@ -285,7 +291,7 @@ services:
     labels:
       - AutohealPelican=true
       - dfpelican.enable=true
-      - dfpelican.0.hostname=${DB_SUBDOMAIN:-db}.${DOMAIN}
+      - dfpelican.0.hostname=${ADMINER_SUBDOMAIN:-db}.${DOMAIN}
       - dfpelican.0.service=http://adminer:8080
       - dfpelican.0.access.policy=default_tld
       - dfpelican.0.zonename=${DOMAIN}
@@ -293,8 +299,8 @@ services:
   crowdsec-init:
     image: alpine:latest
     volumes:
-      - crowdsec_config:/etc/crowdsec
-      - bouncer_config:/etc/crowdsec/bouncers
+      - crowdsec-config:/etc/crowdsec
+      - bouncer-config:/etc/crowdsec/bouncers
     command: >
       sh -c "apk add --no-cache wget ca-certificates &&
              mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
@@ -309,14 +315,17 @@ services:
     depends_on:
       crowdsec-init:
         condition: service_completed_successfully
+    resources:
+        limits:
+          cpus: ${CROWDSEC_CPULIMIT:-2}
     environment:
       - COLLECTIONS=lourys/pterodactyl
       - BOUNCER_KEY_FIREWALL=${CROWDSEC_KEY:-my_super_secret_key_123}
       - DISABLE_ONLINE_API=true
     volumes:
-      - crowdsec_data:/var/lib/crowdsec/data
-      - crowdsec_config:/etc/crowdsec
-      - bouncer_config:/etc/bouncer-shared
+      - crowdsec-data:/var/lib/crowdsec/data
+      - crowdsec-config:/etc/crowdsec
+      - bouncer-config:/etc/bouncer-shared
       - /var/log/pelican:/var/log/pelican:ro
     healthcheck:  
       test: ["CMD", "cscli", "version"]
@@ -329,6 +338,9 @@ services:
     image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.34@sha256:ff1b5b0972ea0cfe39a4f10728effc38f6185a88b742fc4ad5a53d5dca80aca1
     restart: unless-stopped
     network_mode: host
+    resources:
+        limits:
+          cpus: ${CROWDSEC_CPULIMIT:-2}
     depends_on:
       crowdsec:
         condition: service_started
@@ -341,7 +353,7 @@ services:
       API_URL: http://localhost:${CROWDSEC_PORT:-8080}/
       API_KEY: ${CROWDSEC_KEY:-my_super_secret_key_123}
     volumes:
-      - bouncer_config:/config:rw
+      - bouncer-config:/config:rw
       - /etc/localtime:/etc/localtime:ro
 
   autoheal:
@@ -371,9 +383,9 @@ volumes:
   wings-config:
   database:
   dockflare:
-  crowdsec_data:
-  crowdsec_config:
-  bouncer_config:
+  crowdsec-data:
+  crowdsec-config:
+  bouncer-config:
   
 networks:
   Management:
