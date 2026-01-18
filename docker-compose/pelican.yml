@@ -356,9 +356,9 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+        delay: 30s
+        max_attempts: 6
+        window: 60s
       resources:
         limits:
           cpus: ${CROWDSEC_CPULIMIT:-2}
