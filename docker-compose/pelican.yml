@@ -276,8 +276,8 @@ services:
       - ADMINER_PLUGINS=login-env-vars
       - ADMINER_DRIVER=server
       - ADMINER_SERVER=database
-      - ADMINER_USERNAME=root
-      - ADMINER_PASSWORD={MYSQL_ROOT_PASS}
+      - ADMINER_USERNAME=pelican
+      - ADMINER_PASSWORD=${MYSQL_PASS}
     networks:
       Management:
         aliases:
