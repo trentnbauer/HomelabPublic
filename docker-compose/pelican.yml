@@ -400,14 +400,11 @@ services:
       crowdsec:
         condition: service_started
     environment:
-      # LAPI Configuration
-      - BOUNCER_API_ENDPOINT=http://crowdsec:8080
-      - BOUNCER_API_KEY=${CROWDSEC_KEY:-my_super_secret_key_123}
-      # Cloudflare Configuration
-      # You can pass multiple tokens comma-separated: token1,token2
-      - CLOUDFLARE_TOKEN=${CF_APITOKEN}
-      # Optional: If you want to limit to a specific Account ID
-      - CLOUDFLARE_ACCOUNT_ID=${CF_ACCOUNTID}
+      API_URL: http://crowdsec:8080
+      API_KEY: ${CROWDSEC_KEY:-my_super_secret_key_123}
+      CF_APITOKEN: ${CF_APITOKEN}
+      CF_ACCOUNTID: ${CF_ACCOUNTID}
+      DOMAIN: ${DOMAIN}
     volumes:
       - bouncer-config:/etc/crowdsec/bouncers/:rw
       - /etc/localtime:/etc/localtime:ro
