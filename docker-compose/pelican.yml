@@ -36,12 +36,12 @@ services:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
       APP_NAME: ${APP_NAME:-Pelican}
-      APP_KEY: ${APP_KEY}  ### 32 character random password
+      APP_KEY: ${APP_KEY}
       APP_DEBUG: ${DEBUG:-false}
       APP_ENV: production
       APP_LOCALE: ${LOCALE:-en}
       BEHIND_PROXY: true
-      TRUSTED_PROXIES: '*'
+      TRUSTED_PROXIES: '192.168.253.0/24,0.0.0.0/0'
       DB_CONNECTION: mariadb
       DB_HOST: database
       DB_PORT: 3306
