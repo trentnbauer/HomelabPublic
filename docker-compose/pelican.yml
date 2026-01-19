@@ -185,37 +185,6 @@ services:
     labels:
       - AutohealPelican=true
 
-  adminer:
-    image: ghcr.io/jeliebig/adminer-autologin:4.8.1
-    ports:
-      - ${ADMINER_PORT:-8080}:8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-      resources:
-        limits:
-          cpus: ${ADMINER_CPULIMIT:-1}
-    environment:
-      - ADMINER_PLUGINS=login-env-vars
-      - ADMINER_DRIVER=server
-      - ADMINER_SERVER=database
-      - ADMINER_USERNAME=pelican
-      - ADMINER_PASSWORD=${MYSQL_PASS}
-    networks:
-      Management:
-        aliases:
-          - adminer
-    labels:
-      - AutohealPelican=true
-      - dfpelican.enable={$ADMINER_PROXY:-false}
-      - dfpelican.0.hostname=${ADMINER_SUBDOMAIN:-db}.${DOMAIN}
-      - dfpelican.0.service=http://adminer:8080
-      - dfpelican.0.access.policy=${ADMINER_POLICY:-default_tld}
-      - dfpelican.0.zonename=${DOMAIN}
-
   crowdsec-engine:
     image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
     deploy:
