@@ -1,13 +1,12 @@
-crowdsec_config:
-  lapi_url: http://crowdsec:8080/
-  lapi_key: ${API_KEY}
-  update_frequency: 10s
-  include_scenarios_containing: []
-  exclude_scenarios_containing: []
-  only_include_decisions_from: ["cscli", "crowdsec"] 
-  key_path: "" 
-  cert_path: "" 
-  ca_cert_path: ""
+crowdsec_lapi_url: "http://crowdsec:8080/"
+crowdsec_lapi_key: ${API_KEY}
+crowdsec_update_frequency: 10s
+include_scenarios_containing: []
+exclude_scenarios_containing: []
+only_include_decisions_from: ["cscli", "crowdsec"] 
+key_path: "" 
+cert_path: "" 
+ca_cert_path: ""
 
 cloudflare_config:
     accounts:    
