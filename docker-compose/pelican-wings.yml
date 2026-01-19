@@ -100,7 +100,7 @@ services:
       restart_policy:
         condition: on-failure
         delay: 30s
-        max_attempts: 5
+        max_attempts: 99
         window: 120s
       resources:
         limits:
