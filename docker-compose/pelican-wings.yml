@@ -1,0 +1,270 @@
+services:
+  wings:
+    image: ghcr.io/pelican-dev/wings:v1.0.0-beta22@sha256:fa100d398c65764d98a95fd4f7996962a7f0c85f85f22bfd05eb324fc03528e7
+    depends_on:
+      init-wings:
+        condition: service_completed_successfully
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 999
+        window: 30s
+      resources:
+        limits:
+          cpus: ${WINGS_CPULIMIT:-2}
+          #memory: 50M
+    restart: unless-stopped
+    networks:
+      Management:
+        aliases:
+          - wings
+    ports:
+      - ${SFTP_PORT:-2022}:${SFTP_PORT:-2022}
+    tty: true
+    environment:
+      TZ: ${TZ:-UTC}
+      #WINGS_UID: 988
+      #WINGS_GID: 988
+      WINGS_USERNAME: pelican
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/
+      - wings-config:/etc/pelican/
+      - /var/lib/pelican/:/var/lib/pelican/
+      - wings-logs:/var/log/pelican/
+      - /tmp/pelican/:/tmp/pelican/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    labels:
+      - dfwings.enable=true
+      - dfwings.0.hostname=${NODENAME}.${DOMAIN}
+      - dfwings.0.service=http://wings:8080
+      - dfwings.0.access.policy=bypass
+      - dfwings.0.zonename=${DOMAIN}
+      - ah-wings=true
+
+  dockflare:
+    image: alplat/dockflare:v2.0.4
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${DOCKFLARE_CPULIMIT:-2}
+    networks:
+      Management:
+        aliases:
+          - dockflare
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5000 -O /dev/null || exit 1
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 20s 
+    environment:
+      - TUNNEL_NAME=wings-${NODENAME}
+      - LABEL_PREFIX=dfwings
+      - CLOUDFLARED_NETWORK_NAME=wings-mgmt
+      - CLOUDFLARED_IMAGE=cloudflare/cloudflared:latest
+      - TZ=${TZ:-Australia/Melbourne}
+      - CF_API_TOKEN=${CF_APITOKEN}
+      - CF_ACCOUNT_ID=${CF_ACCOUNTID}
+      - AGENT_STATUS_UPDATE_INTERVAL_SECONDS=5
+      - SYNC_ALL_CLOUDFLARE_POLICIES=true
+      - TZ=${TZ:-UTC}
+      - GRACE_PERIOD_SECONDS=28800
+      - CLEANUP_INTERVAL_SECONDS=900
+      - SCAN_ALL_NETWORKS=false
+      - MAX_CONCURRENT_DNS_OPS=${DOCKFLARE_DNSOPS:-2}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - dockflare:/app/data
+    labels:
+      - ah-wings=true
+      
+  ddns:
+    image: favonia/cloudflare-ddns:1.15.1
+    depends_on:
+      wings:
+        condition: service_started
+        restart: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 5
+        window: 120s
+      resources:
+        limits:
+          cpus: 0.25
+    networks:
+      - Management
+    restart: always
+    user: "1000:1000"
+    read_only: true 
+    cap_drop: [all] 
+    security_opt: [no-new-privileges:true] 
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CF_APITOKEN}
+      - DOMAINS=${JOIN_SUBDOMAIN:-join}.${DOMAIN}
+      - PROXIED=${PROXIED-false}
+      - DETECTION_TIMEOUT=15s
+      - UPDATE_CRON=@every ${UPDATE_CRON:-5m}
+      - DELETE_ON_STOP=${DELETE_ON_STOP:-false}
+      - UPDATE_ON_START=${UPDATE_ON_START:-true}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+        
+  crowdsec-engine:
+    image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${CROWDSEC_CPULIMIT:-2}
+    restart: unless-stopped
+    ports:
+      - ${CROWDSEC_PORT:-8080}:8080
+    depends_on:
+      init-crowdsec:
+        condition: service_completed_successfully
+    environment:
+      - COLLECTIONS=lourys/pterodactyl
+      - BOUNCER_KEY_FIREWALL=${CROWDSEC_KEY}
+      - DISABLE_ONLINE_API=false
+    volumes:
+      - crowdsec-data:/var/lib/crowdsec/data
+      - crowdsec-config:/etc/crowdsec
+      - bouncer-config:/etc/bouncer-shared
+      - wings-logs:/var/log/pelican:ro
+    healthcheck:  
+      test: ["CMD", "cscli", "version"]
+    labels:
+      - PelicanAutoheal=true
+    networks:
+      Management:
+        aliases:
+          - crowdsec
+
+  crowdsec-bouncer-fw:
+    image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.34@sha256:ff1b5b0972ea0cfe39a4f10728effc38f6185a88b742fc4ad5a53d5dca80aca1
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 6
+        window: 60s
+      resources:
+        limits:
+          cpus: ${CROWDSEC_CPULIMIT:-2}
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      crowdsec-engine:
+        condition: service_started
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      API_URL: http://localhost:${CROWDSEC_PORT:-8080}/
+      API_KEY: ${CROWDSEC_KEY}
+    volumes:
+      - bouncer-config:/config:rw
+      - /etc/localtime:/etc/localtime:ro
+
+  autoheal:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 5
+        window: 120s
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: ah-wings
+      AUTOHEAL_INTERVAL: 60
+      AUTOHEAL_START_PERIOD: 240
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
+      WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
+    image: willfarrell/autoheal@sha256:732faa8b31f94002728d663f2090d37a109fff5b5fe8654a300fddac5f77c1c4
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  init-wings:
+    image: ghcr.io/pelican-dev/wings:v1.0.0-beta22@sha256:fa100d398c65764d98a95fd4f7996962a7f0c85f85f22bfd05eb324fc03528e7
+    command: /usr/bin/wings configure --panel-url ${PANEL_URL} --token ${PANEL_TOKEN} --node ${NODE_ID} --override
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 999
+        window: 30s
+    restart: unless-stopped
+    networks:
+      Management:
+    tty: true
+    environment:
+      TZ: ${TZ:-UTC}
+      #WINGS_UID: 988
+      #WINGS_GID: 988
+      WINGS_USERNAME: pelican
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/
+      - wings-config:/etc/pelican/
+      - /var/lib/pelican/:/var/lib/pelican/
+      - wings-logs:/var/log/pelican/
+      - /tmp/pelican/:/tmp/pelican/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    labels:
+      - ah-wings=true
+      
+  init-crowdsec:
+    image: alpine:latest
+    volumes:
+      - crowdsec-config:/etc/crowdsec
+      - bouncer-config:/etc/crowdsec/bouncers
+    command: >
+      sh -c "apk add --no-cache wget ca-certificates &&
+             mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
+             wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
+             wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml"
+
+   
+volumes:
+  wings-config:
+  wings-logs:
+  database:
+  dockflare:
+  crowdsec-data:
+  crowdsec-config:
+  bouncer-config:
+  
+networks:
+  Management:
+    name: wings-mgmt
+  wings:
+    name: pelican_nw
