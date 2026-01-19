@@ -4,12 +4,10 @@ crowdsec_config:
   update_frequency: 10s
   include_scenarios_containing: []
   exclude_scenarios_containing: []
-  only_include_decisions_from: [] # "cscli", "crowdsec" if you want decisions from the local API only.
-                                  # This will include CAPI decisions, which has 10k+ IPs, and hence might hit API limit for a free account.
-                                  # For more information on this, visit - https://docs.crowdsec.net/u/bouncers/cloudflare-workers/#appendix-test-with-cloudflare-free-plan
-  key_path: ""  # Used for TLS authentification with CrowdSec LAPI
-  cert_path: "" # Used for TLS authentification with CrowdSec LAPI
-  ca_cert_path: "" # Used for TLS authentification with CrowdSec LAPI
+  only_include_decisions_from: ["cscli", "crowdsec"] 
+  key_path: "" 
+  cert_path: "" 
+  ca_cert_path: ""
 
 cloudflare_config:
     accounts:    
