@@ -77,56 +77,6 @@ services:
       - dfpelican.0.zonename=${DOMAIN}
       - AutohealPelican=true
 
-  wings:
-    image: ghcr.io/pelican-dev/wings:v1.0.0-beta21@sha256:a610344756975ef0f37edc602be26a0656f376b187c84cef7fcc673923a8cc59
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 30s
-        max_attempts: 999
-        window: 30s
-      resources:
-        limits:
-          cpus: ${WINGS_CPULIMIT:-2}
-          #memory: 50M
-    restart: unless-stopped
-    networks:
-      Management:
-        aliases:
-          - wings
-      wings:
-        aliases:
-          - wings
-    ports:
-      - ${SFTP_PORT:-2022}:2022
-    tty: true
-    environment:
-      APP_DEBUG: ${DEBUG:-false}
-      TZ: ${TZ:-UTC}
-      #WINGS_UID: 988
-      #WINGS_GID: 988
-      WINGS_USERNAME: pelican
-      APP_KEY: ${APP_KEY}  ### 32 character random password
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/docker/containers/:/var/lib/docker/containers/
-      - wings-config:/etc/pelican/
-      - /var/lib/pelican/:/var/lib/pelican/
-      - /var/log/pelican/:/var/log/pelican/
-      - /tmp/pelican/:/tmp/pelican/
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "5m"
-        max-file: "3"
-    labels:
-      - dfpelican.enable=true
-      - dfpelican.0.hostname=${WINGS_SUBDOMAIN:-wings}.${DOMAIN}
-      - dfpelican.0.service=http://wings:8080
-      - dfpelican.0.access.policy=bypass
-      - dfpelican.0.zonename=${DOMAIN}
-      - AutohealPelican=true
-
   database:
     image: mariadb:10.11
     restart: unless-stopped
@@ -234,49 +184,6 @@ services:
       - dockflare:/app/data
     labels:
       - AutohealPelican=true
-      - dfpelican.enable=true
-      - dfpelican.0.hostname=${DOCKFLARE_SUBDOMAIN:-dockflare}.${DOMAIN}
-      - dfpelican.0.service=http://dockflare:5000
-      - dfpelican.0.access.policy=default_tld
-      - dfpelican.0.zonename=${DOMAIN}
-      
-  ddns-play:
-    image: favonia/cloudflare-ddns:1.15.1
-    depends_on:
-      wings:
-        condition: service_started
-        restart: true
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 30s
-        max_attempts: 5
-        window: 120s
-      resources:
-        limits:
-          cpus: 0.25
-    networks:
-      - Management
-    restart: always
-    user: "1000:1000"
-    read_only: true 
-    cap_drop: [all] 
-    security_opt: [no-new-privileges:true] 
-    environment:
-      - CLOUDFLARE_API_TOKEN=${CF_APITOKEN}
-      - DOMAINS=${JOIN_SUBDOMAIN:-play}.${DOMAIN}
-      - PROXIED=${PROXIED-false}
-      - DETECTION_TIMEOUT=15s
-      - UPDATE_CRON=@every ${UPDATE_CRON:-5m}
-      - DELETE_ON_STOP=${DELETE_ON_STOP:-false}
-      - UPDATE_ON_START=${UPDATE_ON_START:-true}
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "5m"
-        max-file: "3"
-    labels:
-      - AutohealPelican=true
 
   adminer:
     image: ghcr.io/jeliebig/adminer-autologin:4.8.1
@@ -309,18 +216,7 @@ services:
       - dfpelican.0.access.policy=${ADMINER_POLICY:-default_tld}
       - dfpelican.0.zonename=${DOMAIN}
 
-  crowdsec-init:
-    image: alpine:latest
-    volumes:
-      - crowdsec-config:/etc/crowdsec
-      - bouncer-config:/etc/crowdsec/bouncers
-    command: >
-      sh -c "apk add --no-cache wget ca-certificates &&
-             mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
-             wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml"
-  crowdsec:
+  crowdsec-engine:
     image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
     deploy:
       restart_policy:
@@ -335,7 +231,7 @@ services:
     ports:
       - ${CROWDSEC_PORT:-8080}:8080
     depends_on:
-      crowdsec-init:
+      init-crowdsec:
         condition: service_completed_successfully
     environment:
       - COLLECTIONS=lourys/pterodactyl
@@ -355,34 +251,6 @@ services:
         aliases:
           - crowdsec
 
-  crowdsecbouncer-firewall:
-    image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.34@sha256:ff1b5b0972ea0cfe39a4f10728effc38f6185a88b742fc4ad5a53d5dca80aca1
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 30s
-        max_attempts: 6
-        window: 60s
-      resources:
-        limits:
-          cpus: ${CROWDSEC_CPULIMIT:-2}
-    restart: unless-stopped
-    network_mode: host
-    depends_on:
-      crowdsec:
-        condition: service_started
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    security_opt:
-      - no-new-privileges:true
-    environment:
-      API_URL: http://localhost:${CROWDSEC_PORT:-8080}/
-      API_KEY: ${CROWDSEC_KEY:-my_super_secret_key_123}
-    volumes:
-      - bouncer-config:/config:rw
-      - /etc/localtime:/etc/localtime:ro
-
   crowdsecbouncer-cloudflare:
     image: ghcr.io/crowdsecurity/cloudflare-bouncer:v0.3.0@sha256:39719a070c154866ebc81335e70fdfa1c61eac45025fee7d9bbf8da689fbb2c6
     deploy:
@@ -396,7 +264,7 @@ services:
           cpus: ${CROWDSEC_CPULIMIT:-2}
     restart: unless-stopped
     depends_on:
-      crowdsec:
+      crowdsec-engine:
         condition: service_started
     environment:
       API_URL: http://crowdsec:8080
@@ -430,11 +298,20 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
 
-      
+  init-crowdsec:
+    image: alpine:latest
+    volumes:
+      - crowdsec-config:/etc/crowdsec
+      - bouncer-config:/etc/crowdsec/bouncers
+    command: >
+      sh -c "apk add --no-cache wget ca-certificates &&
+             mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
+             wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
+             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml"
+     
 volumes:
   panel-data:
   panel-logs:
-  wings-config:
   database:
   dockflare:
   crowdsec-data:
