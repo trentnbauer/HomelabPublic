@@ -1,5 +1,5 @@
 crowdsec_config:
-  lapi_url: ${API_URL}
+  lapi_url: http://crowdsec:8080/
   lapi_key: ${API_KEY}
   update_frequency: 10s
   include_scenarios_containing: []
