@@ -404,7 +404,7 @@ services:
       API_KEY: ${CROWDSEC_KEY:-my_super_secret_key_123}
       CF_APITOKEN: ${CF_APITOKEN}
       CF_ACCOUNTID: ${CF_ACCOUNTID}
-      DOMAIN: ${DOMAIN}
+      CF_ZONE_ID: ${CF_ZONE_ID}
     volumes:
       - bouncer-config:/etc/crowdsec/bouncers/:rw
       - /etc/localtime:/etc/localtime:ro
