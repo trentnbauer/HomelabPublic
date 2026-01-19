@@ -8,33 +8,26 @@ crowdsec_config:
   key_path: "" 
   cert_path: "" 
   ca_cert_path: ""
-  
-  
+
 cloudflare_config:
     accounts:    
         - id: ${CF_ACCOUNTID}
           zones: #
             - zone_id: ${CF_ZONE_ID}
               actions:
-                - captcha
-              default_action: captcha # Supported Actions [captcha, ban, none]
+                - managed_challenge
+              default_action: managed_challenge
               routes_to_protect: []
               turnstile:
                 enabled: true
                 rotate_secret_key: true
                 rotate_secret_key_every: 168h0m0s 
-                mode: managed # Supported Modes "managed"|"invisible"|"non-interactive"                
+                mode: managed            
           token: ${CF_APITOKEN}
-          #account_name: x@x.com
           ip_list_prefix: crowdsec
           default_action: managed_challenge
-          total_ip_list_capacity: 5000 # only this many latest IP decisions would be kept
+          total_ip_list_capacity: 5000
           update_frequency: 600s
 
 log_mode: stdout
 log_level: info
-
-prometheus:
-    enabled: false
-    listen_addr: 0.0.0.0
-    listen_port: "2112"
