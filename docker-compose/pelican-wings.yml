@@ -37,11 +37,11 @@ services:
         max-size: "5m"
         max-file: "3"
     labels:
-      - dfwings.enable=true
-      - dfwings.0.hostname=${NODE_SUBDOMAIN}.${DOMAIN}
-      - dfwings.0.service=http://wings:8080
-      - dfwings.0.access.policy=bypass
-      - dfwings.0.zonename=${DOMAIN}
+      - dfwings${NODE_SUBDOMAIN}.enable=true
+      - dfwings${NODE_SUBDOMAIN}.0.hostname=${NODE_SUBDOMAIN}.${DOMAIN}
+      - dfwings${NODE_SUBDOMAIN}.0.service=http://wings:8080
+      - dfwings${NODE_SUBDOMAIN}.0.access.policy=bypass
+      - dfwings${NODE_SUBDOMAIN}.0.zonename=${DOMAIN}
       - ah-wings=true
 
   dockflare:
@@ -68,7 +68,7 @@ services:
       timeout: 20s 
     environment:
       - TUNNEL_NAME=wings-${NODE_SUBDOMAIN}
-      - LABEL_PREFIX=dfwings
+      - LABEL_PREFIX=dfwings${NODE_SUBDOMAIN}
       - CLOUDFLARED_NETWORK_NAME=wings-mgmt
       - CLOUDFLARED_IMAGE=cloudflare/cloudflared:latest
       - TZ=${TZ:-Australia/Melbourne}
