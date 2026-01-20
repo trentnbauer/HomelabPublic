@@ -92,10 +92,6 @@ services:
       
   ddns:
     image: favonia/cloudflare-ddns:1.15.1
-    depends_on:
-      wings:
-        condition: service_started
-        restart: true
     deploy:
       restart_policy:
         condition: on-failure
