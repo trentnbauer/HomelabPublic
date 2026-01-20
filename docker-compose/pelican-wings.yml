@@ -27,10 +27,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/containers/:/var/lib/docker/containers/
-      - wings-config:/etc/pelican/
+      - config:/etc/pelican/
       - /var/lib/pelican/:/var/lib/pelican/
-      - wings-logs:/var/log/pelican/
-      - /tmp/pelican/:/tmp/pelican/
+      - logs:/var/log/pelican/
+      - temp:/tmp/pelican/
     logging:
       driver: "json-file"
       options:
@@ -143,8 +143,8 @@ services:
     volumes:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
-      - bouncer-config:/etc/bouncer-shared
-      - wings-logs:/var/log/pelican:ro
+      - bouncer:/etc/bouncer-shared
+      - logs:/var/log/pelican:ro
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     labels:
@@ -179,7 +179,7 @@ services:
       API_URL: http://localhost:${CROWDSEC_PORT:-8080}/
       API_KEY: ${CROWDSEC_KEY}
     volumes:
-      - bouncer-config:/config:rw
+      - bouncer:/config:rw
       - /etc/localtime:/etc/localtime:ro
 
   autoheal:
@@ -217,10 +217,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/containers/:/var/lib/docker/containers/
-      - wings-config:/etc/pelican/
+      - config:/etc/pelican/
       - /var/lib/pelican/:/var/lib/pelican/
-      - wings-logs:/var/log/pelican/
-      - /tmp/pelican/:/tmp/pelican/
+      - logs:/var/log/pelican/
+      - temp:/tmp/pelican/
     logging:
       driver: "json-file"
       options:
@@ -233,7 +233,7 @@ services:
     image: alpine:latest
     volumes:
       - crowdsec-config:/etc/crowdsec
-      - bouncer-config:/etc/crowdsec/bouncers
+      - bouncer:/etc/crowdsec/bouncers
     command: >
       sh -c "apk add --no-cache wget ca-certificates &&
              mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
@@ -242,13 +242,13 @@ services:
 
    
 volumes:
-  wings-config:
-  wings-logs:
-  database:
+  config:
+  logs:
+  temp:
   dockflare:
   crowdsec-data:
   crowdsec-config:
-  bouncer-config:
+  bouncer:
   
 networks:
   Management:
