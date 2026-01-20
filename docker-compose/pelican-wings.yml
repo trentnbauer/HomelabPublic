@@ -239,16 +239,7 @@ services:
     volumes:
       - crowdsec-config:/etc/crowdsec
       - bouncer:/etc/crowdsec/bouncers
-    command: 
-          - /usr/bin/wings
-          - configure
-          - --panel-url
-          - https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
-          - --token
-          - ${PANEL_TOKEN}
-          - --node
-          - ${NODE_ID}
-          - --override
+    command: /usr/bin/wings configure --panel-url https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN} --token ${PANEL_TOKEN} --node ${NODE_ID} --override
           
 volumes:
   config:
