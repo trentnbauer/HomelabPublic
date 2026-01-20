@@ -201,8 +201,8 @@ services:
       init-crowdsec:
         condition: service_completed_successfully
     environment:
-      #- COLLECTIONS=lourys/pterodactyl
-      #- BOUNCER_KEY_FIREWALL=Heroics9HeadrestQuenchHullPatriot
+      - COLLECTIONS=lourys/pterodactyl
+      - BOUNCER_KEY_FIREWALL=Heroics9HeadrestQuenchHullPatriot
       - DISABLE_ONLINE_API=false
     volumes:
       - crowdsec-data:/var/lib/crowdsec/data
@@ -235,7 +235,7 @@ services:
         condition: service_started
     environment:
       API_URL: http://crowdsec:8080
-      #API_KEY: Heroics9HeadrestQuenchHullPatriot
+      API_KEY: Heroics9HeadrestQuenchHullPatriot
       CF_APITOKEN: ${CF_APITOKEN}
       CF_ACCOUNTID: ${CF_ACCOUNTID}
       CF_ZONE_ID: ${CF_ZONE_ID}
