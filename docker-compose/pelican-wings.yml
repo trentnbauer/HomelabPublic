@@ -21,8 +21,8 @@ services:
     tty: true
     environment:
       TZ: ${TZ:-UTC}
-      #WINGS_UID: 988
-      #WINGS_GID: 988
+      WINGS_UID: 988
+      WINGS_GID: 988
       WINGS_USERNAME: pelican
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -210,8 +210,8 @@ services:
     tty: true
     environment:
       TZ: ${TZ:-UTC}
-      #WINGS_UID: 988
-      #WINGS_GID: 988
+      WINGS_UID: 988
+      WINGS_GID: 988
       WINGS_USERNAME: pelican
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
