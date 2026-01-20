@@ -204,7 +204,12 @@ services:
 
   init-wings:
     image: ghcr.io/pelican-dev/wings:v1.0.0-beta22@sha256:fa100d398c65764d98a95fd4f7996962a7f0c85f85f22bfd05eb324fc03528e7
-    command: /usr/bin/wings configure --panel-url https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN} --token ${PANEL_TOKEN} --node ${NODE_ID} --override
+    command: >
+      /bin/sh -c "echo | /usr/bin/wings configure 
+          --panel-url https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN} 
+          --token ${PANEL_TOKEN} 
+          --node ${NODE_ID} 
+          --override"
     restart: unless-stopped
     networks:
       Management:
