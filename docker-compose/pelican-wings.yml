@@ -1,6 +1,6 @@
 services:
   wings:
-    image: ghcr.io/pelican-dev/wings:v1.0.0-beta22@sha256:fa100d398c65764d98a95fd4f7996962a7f0c85f85f22bfd05eb324fc03528e7
+    image: ghcr.io/pelican-dev/wings:v1.0.0-beta21
     deploy:
       restart_policy:
         condition: on-failure
@@ -203,7 +203,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   init-wings:
-    image: ghcr.io/pelican-dev/wings:v1.0.0-beta22@sha256:fa100d398c65764d98a95fd4f7996962a7f0c85f85f22bfd05eb324fc03528e7
+    image: ghcr.io/pelican-dev/wings:v1.0.0-beta21
     command: 
           - /usr/bin/wings
           - configure
