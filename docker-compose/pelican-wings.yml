@@ -239,14 +239,17 @@ services:
     volumes:
       - crowdsec-config:/etc/crowdsec
       - bouncer:/etc/crowdsec/bouncers
-    command: >
-      sh -c "apk add --no-cache wget ca-certificates &&
-             mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
-             wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml"
-
-   
+    command: 
+          - /usr/bin/wings
+          - configure
+          - --panel-url
+          - https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
+          - --token
+          - ${PANEL_TOKEN}
+          - --node
+          - ${NODE_ID}
+          - --override
+          
 volumes:
   config:
   logs:
