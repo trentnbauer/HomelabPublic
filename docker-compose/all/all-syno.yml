@@ -10,7 +10,7 @@ services:
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       AUTOHEAL_ONLY_MONITOR_RUNNING: true
       WEBHOOK_URL: ${PUSHOVER_WEBHOOK:-""}
-    image: willfarrell/autoheal@sha256:69cf18aa4f270cf9a0490e91a068b3d39bb7123f367cbb14de4ac0670fbd00af
+    image: willfarrell/autoheal@sha256:f391df120c61e103223bdda7a4c756926ac3ea734d96af083e8c6bc51c18d003
     network_mode: none
     restart: always
     volumes:
@@ -55,11 +55,21 @@ services:
       - WATCHTOWER_LABEL_ENABLE=true
 
   beszel-agent:
-    image: ghcr.io/henrygd/beszel/beszel-agent:0.18.2@sha256:5a9a66645e7fb99da9714a3e0231f7dbadef8cbb3878bd23593402e1800bb22c
+    image: ghcr.io/henrygd/beszel/beszel-agent:0.18.2-alpine@sha256:c23e275a043a3d07402f9dc00d80ae1cd1cac7fc2a193f1497e97093ae1c581b
     restart: unless-stopped
     network_mode: host
+    cap_add:
+      - SYS_RAWIO # required for S.M.A.R.T. data
+      - SYS_ADMIN # required for NVMe S.M.A.R.T. data
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev:/dev:ro
+      - /run/udev:/run/udev:ro
+    device_cgroup_rules:
+      - 'b 8:* rwm'       # /dev/sd* (SCSI/SATA disks)
+      - 'b 259:* rwm'     # /dev/nvme*n* (NVMe namespaces)
+      - 'c 10:237 rwm'    # /dev/nvme* (NVMe character device, misc major 10, minor 237)
+      - 'c 21:* rwm'      # /dev/sg* (SCSI generic, used by smartctl on some setups)
     environment:
       - LISTEN=${BESZELPORT:-45876}
       - KEY=$BESZELKEY
