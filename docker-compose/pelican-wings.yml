@@ -29,7 +29,7 @@ services:
       - /var/lib/docker/containers/:/var/lib/docker/containers/
       - /etc/pelican/:/etc/pelican/
       - /var/lib/pelican/:/var/lib/pelican/
-      - /var/log/pelican/:/var/log/pelican/
+      - logs:/var/log/pelican/
       - /tmp/pelican/:/tmp/pelican/
     logging:
       driver: "json-file"
@@ -144,7 +144,7 @@ services:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
       - bouncer:/etc/bouncer-shared
-      - /var/log/pelican/:/var/log/pelican:ro
+      - logs:/var/log/pelican:ro
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     labels:
@@ -196,7 +196,7 @@ services:
       AUTOHEAL_START_PERIOD: 240
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
-    image: willfarrell/autoheal@sha256:69cf18aa4f270cf9a0490e91a068b3d39bb7123f367cbb14de4ac0670fbd00af
+    image: willfarrell/autoheal@sha256:f391df120c61e103223bdda7a4c756926ac3ea734d96af083e8c6bc51c18d003
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -218,7 +218,7 @@ services:
       - /var/lib/docker/containers/:/var/lib/docker/containers/
       - /etc/pelican/:/etc/pelican/
       - /var/lib/pelican/:/var/lib/pelican/
-      - /var/log/pelican/:/var/log/pelican/
+      - logs:/var/log/pelican/
       - /tmp/pelican/:/tmp/pelican/
     logging:
       driver: "json-file"
