@@ -1,0 +1,72 @@
+services:
+  syslog:
+    image: linuxserver/syslog-ng:latest
+    restart: unless-stopped
+    ports:
+      - ${SYSLOG_PORT:-514}:5514/udp
+      - ${SYSLOG_PORT:-514}:6601/tcp 
+    volumes:
+      - syslog:/config
+      - logs:/var/log
+    networks:
+      crowdsec:
+        aliases:
+          - syslog
+  crowdsec-engine:
+    image: crowdsecurity/crowdsec:latest
+    restart: unless-stopped
+    depends_on:
+      init-crowdsec:
+        condition: service_completed_successfully
+      syslog:
+        condition: service_started
+    healthcheck:  
+      test: ["CMD", "cscli", "version"]
+    environment:
+      COLLECTIONS: "crowdsecurity/unifi"
+      BOUNCER_KEY_unifi: ${CROWDSEC_BOUNCER_API_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+    volumes:
+      - crowdsec:/etc/crowdsec
+      - logs:/var/log/syslog:ro
+    networks:
+      crowdsec:
+        aliases:
+          - crowdsec
+          
+  unifi-bouncer:
+    image: ghcr.io/teifun2/cs-unifi-bouncer:latest
+    restart: unless-stopped
+    depends_on:
+      - crowdsec
+    environment:
+      - CROWDSEC_URL=http://crowdsec:8080/
+      - CROWDSEC_BOUNCER_API_KEY=${CROWDSEC_BOUNCER_API_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+      - UNIFI_HOST=${UNIFI_HOST:-https://unifi.com}
+      - UNIFI_USER=${UNIFI_USER}
+      - UNIFI_PASS=${UNIFI_PASS}
+      - UNIFI_SKIP_TLS_VERIFY=true
+    depends_on:
+      crowdsec-engine:
+        condition: service_started
+    networks:
+      crowdsec:
+        aliases:
+          - unifi-bouncer
+          
+  init-crowdsec:
+    image: alpine:latest
+    volumes:
+      - crowdsec:/etc/crowdsec
+    command: >
+      sh -c "apk add --no-cache wget ca-certificates &&
+             mkdir -p /etc/crowdsec/acquisitions.d &&
+             wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/unifi.yaml"
+
+
+networks:
+  crowdsec:
+
+volumes:
+  crowdsec:
+  logs:
+  syslog:
