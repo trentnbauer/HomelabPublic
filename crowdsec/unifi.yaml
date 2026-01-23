@@ -2,6 +2,7 @@ filenames:
   - /var/log/syslog/messages
 labels:
   type: unifi
+---
 filenames:
   - /var/log/syslog/remotes/*/*.log
 labels:
