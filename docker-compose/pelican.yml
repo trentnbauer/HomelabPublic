@@ -205,7 +205,7 @@ services:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
       - bouncer-config:/etc/bouncer-shared
-      - /var/log/pelican:/var/log/pelican:ro
+      - panel-logs:/var/www/html/storage/logs
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     labels:
@@ -256,7 +256,7 @@ services:
       AUTOHEAL_START_PERIOD: 240
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
-    image: willfarrell/autoheal@sha256:f391df120c61e103223bdda7a4c756926ac3ea734d96af083e8c6bc51c18d003
+    image: willfarrell/autoheal@sha256:bc02d4ea527122ce8a619e837c5e58509fae7e6b2bc38f6be22a3d98dbb09069
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
