@@ -23,8 +23,9 @@ services:
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     environment:
-      COLLECTIONS: "crowdsecurity/unifi"
-      BOUNCER_KEY_unifi: ${CROWDSEC_BOUNCER_API_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+      - COLLECTIONS="crowdsecurity/unifi"
+      - BOUNCER_KEY_unifi=${CROWDSEC_BOUNCER_API_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+      - DISABLE_ONLINE_API=false
     volumes:
       - crowdsec:/etc/crowdsec
       - logs:/var/log/syslog:ro
