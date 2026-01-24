@@ -26,7 +26,8 @@ services:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
       - bouncer:/etc/bouncer-shared
-      - logs:/var/log/pelican:ro
+      - /var/log/auth.log:/var/log/auth.log:ro
+      - /var/log/syslog:/var/log/syslog:ro
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     labels:
