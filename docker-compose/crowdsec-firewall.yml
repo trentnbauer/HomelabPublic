@@ -16,7 +16,7 @@ services:
       init:
         condition: service_completed_successfully
     environment:
-      - COLLECTIONS=crowdsecurity/linux crowdsecurity/sshd
+      - COLLECTIONS=crowdsecurity/linux crowdsecurity/sshd crowdsecurity/http-cve crowdsecurity/linux-lpe
       - ENROLL_INSTANCE_NAME=${CROWDSEC_NAME}
       - BOUNCER_KEY_FIREWALL=${BOUNCER_KEY}
       - DISABLE_LOCAL_API=false
