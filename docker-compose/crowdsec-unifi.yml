@@ -1,6 +1,14 @@
 services:
   syslog:
-    image: linuxserver/syslog-ng:latest
+    image: linuxserver/syslog-ng:4.10.2
+    labels:
+      - AH.CS.UniFi=true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     restart: unless-stopped
     ports:
       - ${SYSLOG_PORT:-514}:5514/udp
@@ -12,9 +20,12 @@ services:
       crowdsec:
         aliases:
           - syslog
-  crowdsec-engine:
-    image: crowdsecurity/crowdsec:latest
+          
+  engine:
+    image: crowdsecurity/crowdsec:v1.7.6@sha256:63b595fef92de1778573b375897a45dd226637ee9a3d3db9f57ac7355c369493
     restart: unless-stopped
+    labels:
+      - AH.CS.UniFi=true
     depends_on:
       init-crowdsec:
         condition: service_completed_successfully
@@ -23,46 +34,85 @@ services:
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     environment:
-      - COLLECTIONS="crowdsecurity/unifi"
+      - COLLECTIONS=crowdsecurity/unifi
       - BOUNCER_KEY_unifi=${CROWDSEC_BOUNCER_API_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+      - ENROLL_INSTANCE_NAME=UniFi
+      - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
+      - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     volumes:
       - crowdsec:/etc/crowdsec
       - logs:/var/log/syslog:ro
+      - db:/var/lib/crowdsec/data
     networks:
       crowdsec:
         aliases:
           - crowdsec
           
-  unifi-bouncer:
+  bouncer:
     image: ghcr.io/teifun2/cs-unifi-bouncer:latest
     restart: unless-stopped
-    depends_on:
-      - crowdsec
+    labels:
+      - AH.CS.UniFi=true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     environment:
       - CROWDSEC_URL=http://crowdsec:8080/
       - CROWDSEC_BOUNCER_API_KEY=${CROWDSEC_BOUNCER_API_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
-      - UNIFI_HOST=${UNIFI_HOST:-https://unifi.com}
+      - UNIFI_HOST=${UNIFI_HOST:-https://unifi}
       - UNIFI_USER=${UNIFI_USER}
       - UNIFI_PASS=${UNIFI_PASS}
-      - UNIFI_SKIP_TLS_VERIFY=true
+      - UNIFI_SKIP_TLS_VERIFY=${SKIP_TLS_VERIFY:-true}
     depends_on:
-      crowdsec-engine:
+      engine:
         condition: service_started
     networks:
       crowdsec:
         aliases:
-          - unifi-bouncer
+          - bouncer
           
   init-crowdsec:
     image: alpine:latest
     volumes:
       - crowdsec:/etc/crowdsec
+      - logs:/var/log/syslog
     command: >
       sh -c "apk add --no-cache wget ca-certificates &&
              mkdir -p /etc/crowdsec/acquisitions.d &&
+             mkdir -p /var/log/syslog &&
+             touch /var/log/syslog/messages &&
+             chmod -R 777 /var/log/syslog &&
              wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/unifi.yaml"
 
+  autoheal:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 5
+        window: 120s
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: AH.CS.UniFi
+      AUTOHEAL_INTERVAL: 60
+      AUTOHEAL_START_PERIOD: 240
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
+      WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
+    image: willfarrell/autoheal@sha256:6af8b818b3ad98fd9f6106bd648236d957c4d92e61b48d2c5c8128d68ad76de2
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
   crowdsec:
@@ -71,3 +121,4 @@ volumes:
   crowdsec:
   logs:
   syslog:
+  db:

@@ -120,7 +120,7 @@ services:
         max-file: "3"
         
   crowdsec-engine:
-    image: crowdsecurity/crowdsec:v1.7.4@sha256:4312a5109057f2a6b1237431abe638cd1026ecb3a9c2707c6ccc1ed09e4cb994
+    image: crowdsecurity/crowdsec:v1.7.6@sha256:63b595fef92de1778573b375897a45dd226637ee9a3d3db9f57ac7355c369493
     deploy:
       restart_policy:
         condition: on-failure
@@ -138,8 +138,11 @@ services:
         condition: service_completed_successfully
     environment:
       - COLLECTIONS=lourys/pterodactyl
+      - ENROLL_INSTANCE_NAME=Wings-${NODE_SUBDOMAIN}
       - BOUNCER_KEY_FIREWALL=${CROWDSEC_KEY}
+      - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
+      - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
     volumes:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
@@ -176,8 +179,8 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      API_URL: http://localhost:${CROWDSEC_PORT:-8080}/
-      API_KEY: ${CROWDSEC_KEY}
+      - API_URL=http://localhost:${CROWDSEC_PORT:-8080}/
+      - API_KEY=${CROWDSEC_KEY}
     volumes:
       - bouncer:/config:rw
       - /etc/localtime:/etc/localtime:ro
@@ -196,7 +199,7 @@ services:
       AUTOHEAL_START_PERIOD: 240
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
-    image: willfarrell/autoheal@sha256:bc02d4ea527122ce8a619e837c5e58509fae7e6b2bc38f6be22a3d98dbb09069
+    image: willfarrell/autoheal@sha256:6af8b818b3ad98fd9f6106bd648236d957c4d92e61b48d2c5c8128d68ad76de2
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
