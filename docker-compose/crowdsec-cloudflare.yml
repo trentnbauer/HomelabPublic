@@ -14,7 +14,7 @@ services:
       init:
         condition: service_completed_successfully
     environment:
-      - COLLECTIONS=crowdsecurity/linux
+      - COLLECTIONS=crowdsecurity/linux crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_CLOUDFLARE=${BOUNCER_KEY:-Heroics9HeadrestQuenchHullPatriot}
       - ENROLL_INSTANCE_NAME=Cloudflare
       - DISABLE_LOCAL_API=false

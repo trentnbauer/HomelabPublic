@@ -34,7 +34,7 @@ services:
     healthcheck:  
       test: ["CMD", "cscli", "version"]
     environment:
-      - COLLECTIONS=crowdsecurity/unifi
+      - COLLECTIONS=crowdsecurity/unifi crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_unifi=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
       - ENROLL_INSTANCE_NAME=UniFi
       - DISABLE_LOCAL_API=false
