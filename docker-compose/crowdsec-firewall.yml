@@ -13,7 +13,7 @@ services:
     ports:
       - ${CROWDSEC_PORT:-8080}:8080
     depends_on:
-      init-crowdsec:
+      init:
         condition: service_completed_successfully
     environment:
       - COLLECTIONS=${COLLECTIONS:-crowdsecurity/linux}
@@ -63,7 +63,7 @@ services:
       - bouncer:/config:rw
       - /etc/localtime:/etc/localtime:ro
 
-  init-crowdsec:
+  init:
     image: alpine:latest
     volumes:
       - config:/etc/crowdsec
