@@ -37,6 +37,8 @@ services:
 
   bouncer:
     image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.34@sha256:ff1b5b0972ea0cfe39a4f10728effc38f6185a88b742fc4ad5a53d5dca80aca1
+    labels:
+      - AH.CS.Firewall=true
     deploy:
       restart_policy:
         condition: on-failure
