@@ -51,8 +51,8 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    security_opt:
-      - no-new-privileges:true
+    #security_opt:
+    #  - no-new-privileges:true
     environment:
       - API_URL=http://localhost:${CROWDSEC_PORT:-8080}/
       - API_KEY=${BOUNCER_KEY}
