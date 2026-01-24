@@ -1,0 +1,102 @@
+services:
+  engine:
+    image: crowdsecurity/crowdsec:v1.7.6@sha256:63b595fef92de1778573b375897a45dd226637ee9a3d3db9f57ac7355c369493
+    labels:
+      - AH.CS.Cloudflare=true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    restart: unless-stopped
+    depends_on:
+      init-crowdsec:
+        condition: service_completed_successfully
+    environment:
+      - COLLECTIONS=crowdsecurity/linux
+      - BOUNCER_KEY_CLOUDFLARE=${BOUNCER_KEY:-Heroics9HeadrestQuenchHullPatriot}
+      - ENROLL_INSTANCE_NAME=Cloudflare
+      - DISABLE_LOCAL_API=false
+      - DISABLE_ONLINE_API=false
+      - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
+    volumes:
+      - data:/var/lib/crowdsec/data
+      - config:/etc/crowdsec
+      - bouncer:/etc/bouncer-shared
+      - /var/log/auth.log://var/log/auth.log:ro
+    healthcheck:  
+      test: ["CMD", "cscli", "version"]
+    labels:
+      - PelicanAutoheal=true
+    networks:
+      Management:
+        aliases:
+          - crowdsec
+
+  bouncer:
+    image: ghcr.io/crowdsecurity/cloudflare-bouncer:v0.3.0@sha256:39719a070c154866ebc81335e70fdfa1c61eac45025fee7d9bbf8da689fbb2c6
+    labels:
+      - AH.CS.Cloudflare=true
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 6
+        window: 60s
+    restart: unless-stopped
+    depends_on:
+      engine:
+        condition: service_started
+    environment:
+      - API_URL=http://crowdsec:8080
+      - API_KEY=${BOUNCER_KEY:-Heroics9HeadrestQuenchHullPatriot}
+      - CF_APITOKEN=${CF_APITOKEN}
+      - CF_ACCOUNTID=${CF_ACCOUNTID}
+      - CF_ZONE_ID=${CF_ZONE_ID}
+    volumes:
+      - bouncer:/etc/crowdsec/bouncers/:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      Management:
+        aliases:
+          - bouncer
+
+  init-crowdsec:
+    image: alpine:latest
+    volumes:
+      - config:/etc/crowdsec
+      - bouncer:/etc/crowdsec/bouncers
+    command: >
+      sh -c "apk add --no-cache wget ca-certificates &&
+             mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers &&
+             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml &&
+             wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml"
+
+  autoheal:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 5
+        window: 120s
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: AH.CS.Cloudflare
+      AUTOHEAL_INTERVAL: 60
+      AUTOHEAL_START_PERIOD: 240
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
+      WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
+    image: willfarrell/autoheal@sha256:6af8b818b3ad98fd9f6106bd648236d957c4d92e61b48d2c5c8128d68ad76de2
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+    crowdsec:
+
+volumes:
+  config:
+  bouncer:
+  data:  
