@@ -30,8 +30,6 @@ services:
       - /var/log/syslog:/var/log/syslog:ro
     healthcheck:  
       test: ["CMD", "cscli", "version"]
-    labels:
-      - PelicanAutoheal=true
     networks:
       Management:
         aliases:
