@@ -42,7 +42,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 30s
+        delay: 60s
         max_attempts: 6
         window: 60s
     restart: unless-stopped
