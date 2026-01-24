@@ -16,15 +16,15 @@ services:
       init:
         condition: service_completed_successfully
     environment:
-      - COLLECTIONS=${COLLECTIONS:-crowdsecurity/linux}
-      - ENROLL_INSTANCE_NAME=Wings-${NODE_SUBDOMAIN}
+      - COLLECTIONS=crowdsecurity/linux crowdsecurity/sshd
+      - ENROLL_INSTANCE_NAME=${CROWDSEC_NAME}
       - BOUNCER_KEY_FIREWALL=${CROWDSEC_KEY}
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
       - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
     volumes:
-      - crowdsec-data:/var/lib/crowdsec/data
-      - crowdsec-config:/etc/crowdsec
+      - data:/var/lib/crowdsec/data
+      - config:/etc/crowdsec
       - bouncer:/etc/bouncer-shared
       - /var/log/auth.log:/var/log/auth.log:ro
       - /var/log/syslog:/var/log/syslog:ro
