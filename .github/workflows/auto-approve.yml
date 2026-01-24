@@ -12,3 +12,12 @@ jobs:
       - uses: hmarr/auto-approve-action@v3
         with:
           review-message: "PR created by Trent - auto approved"
+  auto-merge:
+      runs-on: ubuntu-latest
+      if: github.actor == 'trentnbauer'
+      steps:
+        - name: automerge
+          uses: "pascalgn/automerge-action@v0.16.2"
+          env:
+            GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+            MERGE_METHOD: "squash"
