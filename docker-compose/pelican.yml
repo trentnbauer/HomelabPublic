@@ -253,6 +253,7 @@ services:
         delay: 30s
         max_attempts: 5
         window: 120s
+    network_mode: "none"
     environment:
       AUTOHEAL_CONTAINER_LABEL: AutohealPelican
       AUTOHEAL_INTERVAL: 60
