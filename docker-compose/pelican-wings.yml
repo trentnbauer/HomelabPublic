@@ -138,7 +138,7 @@ services:
         condition: service_completed_successfully
     environment:
       - COLLECTIONS=lourys/pterodactyl
-      - ENROLL_INSTANCE_NAME=Wings-${NODE_SUBDOMAIN}
+      - ENROLL_INSTANCE_NAME=WingsSFTP-${NODE_SUBDOMAIN}
       - BOUNCER_KEY_FIREWALL=${CROWDSEC_KEY}
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
