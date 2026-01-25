@@ -66,6 +66,7 @@ services:
 
   pve-sync:
     image: alpine:3.23.2
+    container_name: crowdsec-pve-sync
     network_mode: host
     depends_on:
       engine:
@@ -79,15 +80,15 @@ services:
     command: >
       sh -c "apk add --no-cache curl jq &&
       while true; do
-        echo 'Starting sync check...'
-        # Fetch current bans from CrowdSec
+        echo 'Checking for new bans...'
+        # Get bans from CrowdSec
         CS_BANS=$$(curl -s -H \"X-Api-Key: $$LAPI_KEY\" $$LAPI_URL/decisions | jq -r '.[].value' | sort)
         
-        # Fetch current bans from Proxmox IP Set
+        # Get bans from Proxmox (using // empty to handle null results gracefully)
         PVE_BANS=$$(curl -s -k -H \"Authorization: PVEAPIToken=$$PVE_TOKEN_ID=$$PVE_TOKEN_SECRET\" \
           \"https://localhost:${PVE_PORT:-8006}/api2/json/cluster/firewall/ipset/crowdsec_bans\" | jq -r '.data[].cidr // empty' | sort)
         
-        # Add new bans to Proxmox
+        # Add new bans
         for ip in $$CS_BANS; do
           if ! echo \"$$PVE_BANS\" | grep -q \"$$ip\"; then
             echo \"Adding $$ip to Proxmox...\"
@@ -96,7 +97,7 @@ services:
           fi
         done
         
-        # Remove expired bans from Proxmox
+        # Remove expired bans
         for ip in $$PVE_BANS; do
           if ! echo \"$$CS_BANS\" | grep -q \"$$ip\"; then
             echo \"Removing $$ip from Proxmox...\"
@@ -104,8 +105,6 @@ services:
               \"https://localhost:${PVE_PORT:-8006}/api2/json/cluster/firewall/ipset/crowdsec_bans/$$ip\" > /dev/null
           fi
         done
-        
-        echo 'Sync complete. Sleeping 5 minutes.'
         sleep 300;
       done"
 
