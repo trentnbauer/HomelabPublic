@@ -26,8 +26,7 @@ services:
       - data:/var/lib/crowdsec/data
       - config:/etc/crowdsec
       - bouncer:/etc/bouncer-shared
-      - /var/log/auth.log:/var/log/auth.log:ro
-      - /var/log/syslog:/var/log/syslog:ro
+      - /var/log:/var/log:ro
     healthcheck:  
       test: ["CMD", "cscli", "version"]
       interval: 15s
