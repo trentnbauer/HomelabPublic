@@ -64,7 +64,7 @@ services:
       - bouncer:/config:rw
       - /etc/localtime:/etc/localtime:ro
 
-pve-sync:
+  pve-sync:
     image: alpine:3.23.2
     network_mode: host
     depends_on:
