@@ -12,7 +12,7 @@ services:
       - config:/config
     environment:
       - TZ=${TZ:-Australia/Melbourne}
-      - BASE_URL=https://${CFSUBDOMAIN}${CFDOMAIN}${CFURLPATH:-}
+      - BASE_URL=${CFURLPATH:-}
     healthcheck:
       test: netstat -ltn | grep -c ":9705"
       interval: 30s
