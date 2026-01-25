@@ -1,0 +1,29 @@
+# Standard Linux System Logs (Auth, Syslog)
+# Covers: crowdsecurity/linux, crowdsecurity/sshd, crowdsecurity/linux-lpe
+filenames:
+  - /var/log/auth.log
+  - /var/log/syslog
+  - /var/log/messages
+labels:
+  type: syslog
+---
+# Firewall Logs
+# Covers: crowdsecurity/iptables
+filenames:
+  - /var/log/iptables.log
+  - /var/log/ufw.log
+labels:
+  type: iptables
+---
+# Proxmox Specific Logs
+# Covers: fulljackz/proxmox
+filenames:
+  - /var/log/pveproxy/access.log
+labels:
+  type: pveproxy
+---
+# Proxmox Authentication Logs
+filenames:
+  - /var/log/daemon.log
+labels:
+  type: syslog
