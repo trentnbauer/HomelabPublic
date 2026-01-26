@@ -272,14 +272,26 @@ services:
       - crowdsec-config:/etc/crowdsec
       - bouncer-config:/etc/crowdsec/bouncers
     command: >
-      sh -c "apk add --no-cache wget ca-certificates &&
-             mkdir -p /etc/crowdsec/acquisitions.d /etc/crowdsec/bouncers /etc/crowdsec/parsers/s01-parse /etc/crowdsec/scenarios &&
-             wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml &&
-             wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml &&
-             wget -qO /etc/crowdsec/acquisitions.d/pelican-db.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-db.yaml &&
-             wget -qO /etc/crowdsec/parsers/s01-parse/pelican-parser.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-parser.yaml &&
-             wget -qO /etc/crowdsec/scenarios/pelican-bf.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-bf.yaml"
+      - /bin/sh
+      - -c
+      - |
+        apk add --no-cache wget ca-certificates
+        
+        # Create all directories first
+        mkdir -p /etc/crowdsec/acquisitions.d
+        mkdir -p /etc/crowdsec/bouncers
+        mkdir -p /etc/crowdsec/parsers/s01-parse
+        mkdir -p /etc/crowdsec/scenarios
+        
+        # Standard Pterodactyl/Pelican files
+        wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml
+        wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml
+        wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml
+        
+        # Your specific Pelican security files (URLs kept exactly as requested)
+        wget -qO /etc/crowdsec/acquisitions.d/pelican-db.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-db.yaml
+        wget -qO /etc/crowdsec/parsers/s01-parse/pelican-parser.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-parser.yaml
+        wget -qO /etc/crowdsec/scenarios/pelican-bf.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-bf.yaml
      
 volumes:
   panel-data:
