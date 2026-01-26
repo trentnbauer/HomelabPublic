@@ -1,0 +1,20 @@
+services:
+  codes:
+    restart: always
+    volumes:
+      - autoshift:/autoshift/data
+    image: fabianschweinfurth/autoshift:48a183a
+    command: schedule --user=$${SHIFT_USER} --pass=$${SHIFT_PASS}
+    environment:
+      - TZ=${TZ:-Australia/Melbourne}
+      - SHIFT_PLATFORMS=${SHIFT_PLATFORMS:-steam,epic,psn,xboxlive}
+      - SHIFT_GAMES=${SHIFT_GAMES:-bl1,bl2,bl3,bl4,blps,ttw,gdfll}
+      - SHIFT_USER=${SHIFT_USER}
+      - SHIFT_PASS=${SHIFT_PASS}
+      - SHIFT_LOG_LEVEL=INFO
+      - SHIFT_SCHEDULE=${SHIFT_SCHEDULE:-120}
+      - SHIFT_LIMIT=${SHIFT_LIMIT:-255}
+      - SHIFT_SHIFT_SOURCE=https://raw.githubusercontent.com/ugoogalizer/autoshift-codes/main/shiftcodes.json
+
+volumes:
+  autoshift:
