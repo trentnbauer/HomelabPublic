@@ -1,4 +1,4 @@
-name: trentbauer.com/pelican-auth-parser
+name: trentbauer.com/pelicanpanel-auth-parser
 description: "Parse Pelican Panel auth logs from MySQL"
 filter: "evt.Meta.datasource == 'mysql' && evt.Labels.type == 'pelican-auth'"
 onsuccess: next_stage
