@@ -4,13 +4,13 @@ filter: "evt.Meta.type == 'pelican-auth'"
 onsuccess: next_stage
 nodes:
   - grok:
-      # Use single quotes to ensure \s is treated as a regex space, not a YAML escape
+      # Single quotes prevent YAML escape character errors with \s
       pattern: '^%{IP:source_ip}\s+%{DATA:user_email}\s+%{TIMESTAMP_ISO8601:timestamp}'
       apply_on: message
 statics:
   - target: evt.StrTime
-    src: timestamp
+    source: timestamp
   - target: evt.Meta.source_ip
-    src: source_ip
+    source: source_ip
   - target: evt.Meta.user
-    src: user_email
+    source: user_email
