@@ -1,12 +1,12 @@
 source: mysql
 db_config:
-  host: database
-  port: 3306
-  user: pelican
-  password: ${MYSQL_PASS}
+  db_type: mysql
+  db_user: pelican
+  db_password: ${MYSQL_PASS}
+  db_host: database
   db_name: pelican
-  queries:
-    - query: "SELECT id, ip, event, timestamp FROM activity_logs WHERE event = 'auth:fail' AND id > ?"
-      incremental_column: id
-      labels:
-        type: pelican-auth
+  port: 3306
+# This matches your successful manual query
+db_query: "SELECT ip, JSON_UNQUOTE(JSON_EXTRACT(properties, '$.email')), timestamp FROM activity_logs WHERE event = 'auth:fail' AND id > :id"
+# We map the data to the 'pelican-auth' type so the parser knows to pick it up
+type: pelican-auth
