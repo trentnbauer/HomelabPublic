@@ -277,9 +277,9 @@ services:
              wget -qO /etc/crowdsec/acquis.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pterodactyl.yaml &&
              wget -qO /etc/crowdsec/bouncers/crowdsec-cloudflare-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-cloudflare-bouncer.yaml &&
              wget -qO /etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/crowdsec-firewall-bouncer.yaml &&
-             wget -qO /etc/crowdsec/acquisitions.d/pelican-db.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/acquisitions.d/pelican-db.yaml &&
-             wget -qO /etc/crowdsec/parsers/s01-parse/pelican-parser.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/parsers/s01-parse/pelican-parser.yaml &&
-             wget -qO /etc/crowdsec/scenarios/pelican-bf.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/scenarios/pelican-bf.yaml"
+             wget -qO /etc/crowdsec/acquisitions.d/pelican-db.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-db.yaml &&
+             wget -qO /etc/crowdsec/parsers/s01-parse/pelican-parser.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-parser.yaml &&
+             wget -qO /etc/crowdsec/scenarios/pelican-bf.yaml https://raw.githubusercontent.com/trentnbauer/HomelabPublic/main/crowdsec/pelican-bf.yaml"
      
 volumes:
   panel-data:
