@@ -1,0 +1,12 @@
+source: mysql
+db_config:
+  host: database
+  port: 3306
+  user: pelican
+  password: ${MYSQL_PASS}
+  db_name: pelican
+  queries:
+    - query: "SELECT id, ip, event, timestamp FROM activity_logs WHERE event = 'auth:fail' AND id > ?"
+      incremental_column: id
+      labels:
+        type: pelican-auth
