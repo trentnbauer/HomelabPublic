@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/plexguide/huntarr:9.0.1@sha256:b3043db18e4f3d8c06691a493e5c235121624c750284fea12ad0c0d38a7cde14
+    image: ghcr.io/plexguide/huntarr:9.0.5@sha256:3a0422dd2201bfcee0d38526d170362b467847c611ddcf68ea8aba94b4a54133
     networks:
       - cloudflare-net
     restart: always
