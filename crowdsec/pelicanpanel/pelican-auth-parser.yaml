@@ -8,8 +8,8 @@ nodes:
       apply_on: message
 statics:
   - target: evt.StrTime
-    src: timestamp
-  - target: evt.Meta.source_ip
-    src: source_ip
-  - target: evt.Meta.user
-    src: user_email
+    expression: evt.Parsed.timestamp
+  - meta: source_ip
+    expression: evt.Parsed.source_ip
+  - meta: target_user
+    expression: evt.Parsed.user_email
