@@ -6,10 +6,16 @@ nodes:
   - grok:
       pattern: '^%{IPORHOST:source_ip}[ \t]+%{DATA:user_email}[ \t]+%{TIMESTAMP_ISO8601:timestamp}'
       apply_on: message
+      
 statics:
   - target: evt.StrTime
     expression: evt.Parsed.timestamp
+
   - meta: source_ip
     expression: evt.Parsed.source_ip
+
   - meta: target_user
     expression: evt.Parsed.user_email
+
+  - meta: log_type
+    value: pelican_auth_fail
