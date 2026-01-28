@@ -1,11 +1,11 @@
 type: leaky
-name: trentbauer.com/pelican-bf
-description: "Detect repeated Pelican Panel auth lockouts"
+name: trentbauer.com/pelican-bf-test
+description: "TEST: fast trigger for Pelican auth failures"
 filter: "evt.Meta.log_type == 'pelican_auth_fail'"
-capacity: 8
-leakspeed: 1m
+capacity: 2
+leakspeed: 30m
 groupby: "evt.Meta.source_ip"
-blackhole: 15m
+blackhole: 5m
 labels:
   remediation: true
   service: pelican
