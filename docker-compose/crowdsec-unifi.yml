@@ -61,7 +61,7 @@ services:
           - crowdsec
           
   bouncer:
-    image: ghcr.io/teifun2/cs-unifi-bouncer:latest
+    image: ghcr.io/teifun2/cs-unifi-bouncer:v1.2.2@sha256:16590b6fc7cb784fc2fc2fbd7fa3a2782f12823e2787dfb55f63fc8521bc4853
     restart: unless-stopped
     labels:
       - AH.CS.UniFi=true
@@ -87,7 +87,7 @@ services:
           - bouncer
           
   init:
-    image: alpine:latest
+    image: alpine:3.23.3
     volumes:
       - crowdsec:/etc/crowdsec
       - logs:/var/log/syslog
