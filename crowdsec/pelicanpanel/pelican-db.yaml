@@ -1,11 +1,12 @@
-source: mysql
+#source: mysql
 db_config:
-  db_type: mysql
-  db_user: ${MYSQL_USER}
-  db_password: ${MYSQL_PASS}
-  db_host: ${MYSQL_DB_HOST}
+  type: mysql
+  user: ${MYSQL_USER}
+  password: ${MYSQL_PASS}
+  host: ${MYSQL_DB_HOST}
   db_name: ${MYSQL_DB_NAME}
   port: 3306
+  sslmode: disabled
 # This matches your successful manual query
 db_query: "SELECT ip, JSON_UNQUOTE(JSON_EXTRACT(properties, '$.email')), timestamp FROM activity_logs WHERE event = 'auth:fail' AND id > :id"
 # We map the data to the 'pelican-auth' type so the parser knows to pick it up
