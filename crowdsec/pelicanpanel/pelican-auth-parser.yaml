@@ -1,0 +1,9 @@
+name: trentbauer.com/pelicanpanel-auth-parser
+description: "Parse Pelican failed auth log"
+filter: "evt.Labels.type == 'pelican-auth'"
+onsuccess: next_stage
+statics:
+  - meta: source_ip
+    expression: "ip=([^ ]+)"
+  - meta: log_type
+    value: pelican_auth_fail
