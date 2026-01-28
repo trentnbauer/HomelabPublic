@@ -9,4 +9,5 @@ db_config:
 # This matches your successful manual query
 db_query: "SELECT ip, JSON_UNQUOTE(JSON_EXTRACT(properties, '$.email')), timestamp FROM activity_logs WHERE event = 'auth:fail' AND id > :id"
 # We map the data to the 'pelican-auth' type so the parser knows to pick it up
-type: pelican-auth
+labels:
+  type: pelican-auth
