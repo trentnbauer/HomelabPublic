@@ -31,7 +31,7 @@ services:
           - panel
     volumes:
       - panel-data:/pelican-data
-      - /var/www/pelican/storage/logs:/var/www/html/storage/logs
+      - panel-logs:/var/www/html/storage/logs
     environment:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
