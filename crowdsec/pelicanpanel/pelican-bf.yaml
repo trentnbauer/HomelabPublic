@@ -1,11 +1,11 @@
 type: leaky
 name: trentbauer.com/pelican-bf-test
-description: "TEST: fast trigger for Pelican auth failures"
+description: "TEST: instant trigger"
 filter: "evt.Meta.log_type == 'pelican_auth_fail'"
-capacity: 2
-leakspeed: 30m
+capacity: 1
+leakspeed: 1h
 groupby: "evt.Meta.source_ip"
-blackhole: 5m
+blackhole: 1m
 labels:
   remediation: true
   service: pelican
