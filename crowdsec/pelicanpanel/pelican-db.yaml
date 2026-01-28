@@ -1,4 +1,4 @@
-#source: mysql
+source: mysql
 db_config:
   type: mysql
   user: ${MYSQL_USER}
