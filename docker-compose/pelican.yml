@@ -104,6 +104,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASS}
       MYSQL_DATABASE: "pelican"
       MYSQL_USER: "pelican"
+      MARIADB_AUTO_UPGRADE: true
     logging:
       driver: "json-file"
       options:
