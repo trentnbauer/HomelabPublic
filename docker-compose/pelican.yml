@@ -78,7 +78,7 @@ services:
       - AutohealPelican=true
 
   database:
-    image: mariadb:10.11
+    image: mariadb:12.1
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
     deploy:
