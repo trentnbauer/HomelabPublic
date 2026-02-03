@@ -124,7 +124,7 @@ services:
       #- dfgeneric.path=${URLPATH:-}
       
   portracker:
-    image: mostafawahied/portracker:1.2.2@sha256:4464bc74d909f54cf29df5f4d44f8e2190e589219b9d092b48ba054077ab4582
+    image: mostafawahied/portracker:1.3.0@sha256:693e4e3025faeb5e854c1a789017c77063ace51df075396475be4e54469ae002
     restart: unless-stopped
     network_mode: "host"
     pid: "host"
