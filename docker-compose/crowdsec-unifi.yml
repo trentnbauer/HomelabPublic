@@ -89,7 +89,7 @@ services:
         aliases:
           - bouncer
           
-  crowdsec-blocklist-import:
+  blocklist-import:
     image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.0
     restart: unless-stopped
     labels:
