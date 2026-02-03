@@ -10,6 +10,8 @@ services:
         max_attempts: 3
         window: 120s
     restart: unless-stopped
+    environment:
+      - TZ=${TZ:-UTC}  
     ports:
       - ${SYSLOG_PORT:-514}:5514/udp
       - ${SYSLOG_PORT:-514}:6601/tcp 
@@ -41,6 +43,7 @@ services:
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
       - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
+      - TZ=${TZ:-UTC}  
     healthcheck:  
       test: ["CMD", "cscli", "version"]
       interval: 30s
@@ -79,6 +82,7 @@ services:
       - UNIFI_USER=${UNIFI_USER}
       - UNIFI_PASS=${UNIFI_PASS}
       - UNIFI_SKIP_TLS_VERIFY=${SKIP_TLS_VERIFY:-true}
+      - TZ=${TZ:-UTC}  
     depends_on:
       engine:
         condition: service_healthy
