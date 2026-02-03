@@ -36,6 +36,7 @@ services:
     environment:
       - COLLECTIONS=crowdsecurity/unifi crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_unifi=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+      - BOUNCER_KEY_blocklist-importer=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
       - ENROLL_INSTANCE_NAME=UniFi
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
@@ -86,6 +87,18 @@ services:
         aliases:
           - bouncer
           
+  crowdsec-blocklist-import:
+    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:latest
+    restart: unless-stopped
+    labels:
+      - AH.CS.UniFi=true
+    environment:
+      - CROWDSEC_LAPI_URL=http://crowdsec:8080/
+      - CROWDSEC_MACHINE_ID=blocklist-importer
+      - CROWDSEC_MACHINE_PASSWORD=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
+      - DECISION_DURATION=24h
+      - TZ=${TZ:-UTC}  
+      
   init:
     image: alpine:3.23.3
     volumes:
