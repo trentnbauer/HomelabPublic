@@ -33,8 +33,6 @@ services:
         condition: service_completed_successfully
       syslog:
         condition: service_started
-    healthcheck:  
-      test: ["CMD", "cscli", "version"]
     environment:
       - COLLECTIONS=crowdsecurity/unifi crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_unifi=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
