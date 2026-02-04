@@ -97,7 +97,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.10'
+          cpus: '0.05'
     restart: unless-stopped
     labels:
       - AH.CS.UniFi=true
