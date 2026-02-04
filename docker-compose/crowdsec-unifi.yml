@@ -61,20 +61,7 @@ services:
       crowdsec:
         aliases:
           - crowdsec
-    command: >
-      sh -c "
-      echo '[startup] Waiting for Local API...' &&
-      until cscli machines list >/dev/null 2>&1; do sleep 2; done &&
-      if cscli machines list -o json | grep -q '\"name\":\"'blocklist'\"'; then
-        echo '[startup] Machine already exists';
-      else
-        echo '[startup] Adding machine' &&
-        cscli machines add \"blocklist\" --password \"$BOUNCER_KEY\";
-      fi &&
-      exec /docker_start.sh
-      "
-
-          
+         
   bouncer:
     image: ghcr.io/teifun2/cs-unifi-bouncer:v1.2.2@sha256:16590b6fc7cb784fc2fc2fbd7fa3a2782f12823e2787dfb55f63fc8521bc4853
     restart: unless-stopped
