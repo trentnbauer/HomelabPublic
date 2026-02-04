@@ -98,6 +98,7 @@ services:
       #- CROWDSEC_LAPI_URL=http://crowdsec:8080/
       #- CROWDSEC_MACHINE_ID=blocklist
       #- CROWDSEC_MACHINE_PASSWORD=blocklist
+      - MODE=docker
       - CROWDSEC_CONTAINER=crowdsec-unifi-engine
       - DECISION_DURATION=24h
       - TZ=${TZ:-UTC}
