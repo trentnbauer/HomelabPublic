@@ -36,8 +36,6 @@ services:
     environment:
       - COLLECTIONS=crowdsecurity/unifi crowdsecurity/whitelist-good-actors
       - BOUNCER_KEY_unifi=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
-      - AGENT_USERNAME=UniFi
-      - AGENT_PASSWORD=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
       - ENROLL_INSTANCE_NAME=UniFi
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
