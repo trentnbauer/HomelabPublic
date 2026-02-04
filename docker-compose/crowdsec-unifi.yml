@@ -94,13 +94,6 @@ services:
     depends_on:
       engine:
         condition: service_healthy
-    #deploy:
-    #  resources:
-    #    limits:
-    #      cpus: '0.05' 
-          # This container is intended to be periodly ran by the user, or on a CRON. I'm not a fan of this as its managed outside of the Compose stack
-          # As the container has a restart policy, it runs, imports the data, exits and then starts again. This is wasted CPU cycles checking and massaging the same data
-          # Limiting the container to 5% CPU greatly reduces the speed it runs at, reducing how often it interfaces with UniFi.
     restart: unless-stopped
     labels:
       - AH.CS.UniFi=true
@@ -115,6 +108,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
+    # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
       
   init:
     image: alpine:3.23.3
