@@ -98,7 +98,7 @@ services:
       resources:
         limits:
           cpus: '0.10'
-    restart_policy: always
+    restart: unless-stopped
     labels:
       - AH.CS.UniFi=true
     environment:
