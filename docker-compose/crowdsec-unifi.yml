@@ -95,10 +95,10 @@ services:
       engine:
         condition: service_healthy
     deploy:
-      restart_policy:
-        condition: any
-        delay: 6h
-        window: 1s
+      resources:
+        limits:
+          cpus: '0.10'
+    restart_policy: always
     labels:
       - AH.CS.UniFi=true
     environment:
