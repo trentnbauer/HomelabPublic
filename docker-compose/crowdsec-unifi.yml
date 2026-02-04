@@ -114,7 +114,7 @@ services:
       - TZ=${TZ:-UTC}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; sleep 21600; done"
+    entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
       
   init:
     image: alpine:3.23.3
