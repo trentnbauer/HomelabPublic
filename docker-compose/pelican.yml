@@ -185,6 +185,7 @@ services:
 
   crowdsec-engine:
     image: crowdsecurity/crowdsec:v1.7.6@sha256:63b595fef92de1778573b375897a45dd226637ee9a3d3db9f57ac7355c369493
+    container_name: crowdsec-panel-engine
     deploy:
       restart_policy:
         condition: on-failure
@@ -245,6 +246,28 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - Management
+
+  blocklist:
+    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.0
+    depends_on:
+      crowdsec-engine:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      - AH.CS.UniFi=true
+    environment:
+      #- CROWDSEC_LAPI_URL=http://crowdsec:8080/
+      #- CROWDSEC_MACHINE_ID=blocklist
+      #- CROWDSEC_MACHINE_PASSWORD=blocklist
+      - MODE=docker
+      - CROWDSEC_CONTAINER=crowdsec-panel-engine
+      - DECISION_DURATION=24h
+      - TZ=${TZ:-UTC}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
+    # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
+    
 
   autoheal:
     deploy:
