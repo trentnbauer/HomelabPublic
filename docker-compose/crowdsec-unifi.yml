@@ -71,7 +71,7 @@ services:
         echo '[startup] Adding machine' &&
         cscli machines add \"blocklist\" --password \"$BOUNCER_KEY\";
       fi &&
-      exec crowdsec
+      exec /docker_start.sh
       "
 
           
