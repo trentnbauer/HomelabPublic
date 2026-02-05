@@ -111,7 +111,13 @@ services:
       - crowdsec:/engineconfig
     entrypoint: >
         /bin/sh -c "
+        echo 'Waiting for credentials file...';
+        while [ ! -f /engineconfig/local_api_credentials.yaml ]; do sleep 1; done;
+        
         export CROWDSEC_MACHINE_PASSWORD=$$(grep 'password:' /engineconfig/local_api_credentials.yaml | awk '{print $$2}');
+        
+        echo \"Password extracted: $${#CROWDSEC_MACHINE_PASSWORD} characters long.\";
+        
         while true; do 
           /usr/local/bin/import.sh; 
           echo 'Import complete. Sleeping for 6 hours...'; 
