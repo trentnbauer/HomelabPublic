@@ -74,7 +74,7 @@ services:
         max_attempts: 3
         window: 120s
     environment:
-      - CROWDSEC_URL=http://crowdsec:8080/
+      - CROWDSEC_URL=http://crowdsec:8080
       - CROWDSEC_BOUNCER_API_KEY=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
       - UNIFI_HOST=${UNIFI_HOST:-https://unifi}
       - UNIFI_USER=${UNIFI_USER}
@@ -99,7 +99,7 @@ services:
       - AH.CS.UniFi=true
     environment:
       - CROWDSEC_LAPI_URL=http://crowdsec:8080/
-      - CROWDSEC_MACHINE_ID=local
+      - CROWDSEC_MACHINE_ID=localhost
       #- CROWDSEC_MACHINE_PASSWORD=blocklist
       #- MODE=docker
       - CROWDSEC_CONTAINER=crowdsec-unifi-engine
