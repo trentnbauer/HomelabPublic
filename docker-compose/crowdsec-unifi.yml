@@ -60,7 +60,7 @@ services:
       crowdsec:
         aliases:
           - crowdsec
-    command: >
+    entrypoint: >
       /bin/bash -c "
       cscli machines add blocklist --password OccupantCorporalVividness9DiabetesCrumb -f /etc/crowdsec/blocklist_credentials.yaml --force && 
       /bin/bash /docker_start.sh" 
