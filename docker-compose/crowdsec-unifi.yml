@@ -99,36 +99,17 @@ services:
       - AH.CS.UniFi=true
     environment:
       - CROWDSEC_LAPI_URL=http://crowdsec:8080
-      - CROWDSEC_MACHINE_ID=blocklist-importer
-      #- CROWDSEC_MACHINE_PASSWORD=blocklist
+      - CROWDSEC_MACHINE_ID=blocklist
+      - CROWDSEC_MACHINE_PASSWORD=blocklist
+      - MODE=lapi
       #- MODE=docker
-      - CROWDSEC_CONTAINER=crowdsec-unifi-engine
+      #- CROWDSEC_CONTAINER=crowdsec-unifi-engine
       - DECISION_DURATION=24h
       - TZ=${TZ:-UTC}
       - MAX_DECISIONS=${MAX_DECISIONS:-15000} # USG3P=8000, UDR=15000, UDM Pro=50000
     volumes:
       #- /var/run/docker.sock:/var/run/docker.sock:ro
-      - crowdsec:/engineconfig
-    entrypoint: >
-        /bin/sh -c "
-        echo 'Waiting for credentials file...';
-        while [ ! -f /engineconfig/local_api_credentials.yaml ]; do sleep 1; done;
-        
-        export CROWDSEC_MACHINE_ID=$$(grep 'login:' /engineconfig/local_api_credentials.yaml | awk '{print $$2}');
-        export CROWDSEC_MACHINE_PASSWORD=$$(grep 'password:' /engineconfig/local_api_credentials.yaml | awk '{print $$2}');
-        
-        while true; do 
-          echo \"--- DEBUG CHECK ---\";
-          echo \"URL: $$CROWDSEC_LAPI_URL\";
-          echo \"ID: $$CROWDSEC_MACHINE_ID\";
-          echo \"PW: $$CROWDSEC_MACHINE_PASSWORD\";
-          echo \"--------------------\";
-          
-          /usr/local/bin/import.sh; 
-          
-          echo 'Import complete. Sleeping for 6 hours...'; 
-          sleep 21600; 
-        done"
+    entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
     # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
       
   init:
