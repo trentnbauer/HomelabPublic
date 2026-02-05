@@ -114,12 +114,18 @@ services:
         echo 'Waiting for credentials file...';
         while [ ! -f /engineconfig/local_api_credentials.yaml ]; do sleep 1; done;
         
+        export CROWDSEC_MACHINE_ID=$$(grep 'login:' /engineconfig/local_api_credentials.yaml | awk '{print $$2}');
         export CROWDSEC_MACHINE_PASSWORD=$$(grep 'password:' /engineconfig/local_api_credentials.yaml | awk '{print $$2}');
         
-        echo \"Password extracted: $${#CROWDSEC_MACHINE_PASSWORD} characters long.\";
-        
         while true; do 
+          echo \"--- DEBUG CHECK ---\";
+          echo \"URL: $$CROWDSEC_LAPI_URL\";
+          echo \"ID: $$CROWDSEC_MACHINE_ID\";
+          echo \"PW: $$CROWDSEC_MACHINE_PASSWORD\";
+          echo \"--------------------\";
+          
           /usr/local/bin/import.sh; 
+          
           echo 'Import complete. Sleeping for 6 hours...'; 
           sleep 21600; 
         done"
