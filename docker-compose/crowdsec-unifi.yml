@@ -24,7 +24,6 @@ services:
           - syslog
           
   engine:
-    container_name: crowdsec-unifi-engine
     image: crowdsecurity/crowdsec:v1.7.6@sha256:63b595fef92de1778573b375897a45dd226637ee9a3d3db9f57ac7355c369493
     restart: unless-stopped
     labels:
@@ -63,7 +62,7 @@ services:
           - crowdsec
     command: >
       /bin/bash -c "
-      cscli machines add blocklist --password blocklist -f /etc/crowdsec/blocklist_credentials.yaml --force && 
+      cscli machines add blocklist --password OccupantCorporalVividness9DiabetesCrumb -f /etc/crowdsec/blocklist_credentials.yaml --force && 
       /bin/bash /docker_start.sh" 
       
   bouncer:
@@ -104,7 +103,7 @@ services:
     environment:
       - CROWDSEC_LAPI_URL=http://crowdsec:8080
       - CROWDSEC_MACHINE_ID=blocklist
-      - CROWDSEC_MACHINE_PASSWORD=blocklist
+      - CROWDSEC_MACHINE_PASSWORD=OccupantCorporalVividness9DiabetesCrumb
       - MODE=lapi
       #- MODE=docker
       #- CROWDSEC_CONTAINER=crowdsec-unifi-engine
