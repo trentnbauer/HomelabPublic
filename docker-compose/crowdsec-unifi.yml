@@ -61,7 +61,11 @@ services:
       crowdsec:
         aliases:
           - crowdsec
-         
+    command: >
+      /bin/bash -c "
+      cscli machines add blocklist --password blocklist -f /etc/crowdsec/blocklist_credentials.yaml --force && 
+      /bin/bash /docker_start.sh" 
+      
   bouncer:
     image: ghcr.io/teifun2/cs-unifi-bouncer:v1.2.2@sha256:16590b6fc7cb784fc2fc2fbd7fa3a2782f12823e2787dfb55f63fc8521bc4853
     restart: unless-stopped
