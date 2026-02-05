@@ -98,8 +98,8 @@ services:
     labels:
       - AH.CS.UniFi=true
     environment:
-      #- CROWDSEC_LAPI_URL=http://crowdsec:8080/
-      #- CROWDSEC_MACHINE_ID=blocklist
+      - CROWDSEC_LAPI_URL=http://crowdsec:8080/
+      - CROWDSEC_MACHINE_ID=local
       #- CROWDSEC_MACHINE_PASSWORD=blocklist
       - MODE=docker
       - CROWDSEC_CONTAINER=crowdsec-unifi-engine
@@ -108,7 +108,16 @@ services:
       - MAX_DECISIONS=${MAX_DECISIONS:-15000} # USG3P=8000, UDR=15000, UDM Pro=50000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
+      - crowdsec:/engineconfig
+    entrypoint: >
+      /bin/sh -c "
+      CROWDSEC_MACHINE_PASSWORD=$(grep 'password:' /etc/crowdsec/local_api_credentials.yaml | awk '{print $2}');
+      export CROWDSEC_MACHINE_PASSWORD;
+      while true; do 
+        /usr/local/bin/import.sh; 
+        echo 'Sleeping for 6 hours...'; 
+        sleep 21600; 
+      done"
     # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
       
   init:
