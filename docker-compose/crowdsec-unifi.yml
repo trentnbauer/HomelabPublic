@@ -105,6 +105,7 @@ services:
       - CROWDSEC_CONTAINER=crowdsec-unifi-engine
       - DECISION_DURATION=24h
       - TZ=${TZ:-UTC}
+      - MAX_DECISIONS=${MAX_DECISIONS:-15000} # USG3P=8000, UDR=15000, UDM Pro=50000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
