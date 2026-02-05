@@ -99,7 +99,7 @@ services:
       - AH.CS.UniFi=true
     environment:
       - CROWDSEC_LAPI_URL=http://crowdsec:8080
-      - CROWDSEC_MACHINE_ID=localhost
+      - CROWDSEC_MACHINE_ID=blocklist-importer
       #- CROWDSEC_MACHINE_PASSWORD=blocklist
       #- MODE=docker
       - CROWDSEC_CONTAINER=crowdsec-unifi-engine
