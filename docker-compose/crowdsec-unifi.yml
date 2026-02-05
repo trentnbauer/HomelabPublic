@@ -90,7 +90,7 @@ services:
           - bouncer
           
   blocklist:
-    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.0
+    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.1
     depends_on:
       engine:
         condition: service_healthy
