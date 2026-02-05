@@ -109,7 +109,7 @@ services:
       #- CROWDSEC_CONTAINER=crowdsec-unifi-engine
       - DECISION_DURATION=24h
       - TZ=${TZ:-UTC}
-      - MAX_DECISIONS=${MAX_DECISIONS:-15000} # USG3P=8000, UDR=15000, UDM Pro=50000
+      - MAX_DECISIONS=${MAX_DECISIONS:-8000} # USG3P=8000, UDR=15000, UDM Pro=50000
     entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
     # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
     networks:
