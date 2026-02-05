@@ -111,7 +111,7 @@ services:
       - crowdsec:/engineconfig
     entrypoint: >
       /bin/sh -c "
-      CROWDSEC_MACHINE_PASSWORD=$(grep 'password:' /etc/crowdsec/local_api_credentials.yaml | awk '{print $2}');
+      CROWDSEC_MACHINE_PASSWORD=$(grep 'password:' /engineconfig/local_api_credentials.yaml | awk '{print $2}');
       export CROWDSEC_MACHINE_PASSWORD;
       while true; do 
         /usr/local/bin/import.sh; 
