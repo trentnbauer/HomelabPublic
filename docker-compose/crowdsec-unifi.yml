@@ -40,7 +40,7 @@ services:
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
       - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
-      - BLOCKLISTPASSWORD=${CROWDSEC_MACHINE_PASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
+      - BLOCKLISTPASSWORD=${BLOCKLISTPASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
       - TZ=${TZ:-UTC}  
     healthcheck:  
       test: ["CMD", "cscli", "version"]
@@ -104,7 +104,7 @@ services:
     environment:
       - CROWDSEC_LAPI_URL=http://crowdsec:8080
       - CROWDSEC_MACHINE_ID=blocklist
-      - CROWDSEC_MACHINE_PASSWORD=${CROWDSEC_MACHINE_PASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
+      - CROWDSEC_MACHINE_PASSWORD=${BLOCKLISTPASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
       - MODE=lapi
       #- MODE=docker
       #- CROWDSEC_CONTAINER=crowdsec-unifi-engine
