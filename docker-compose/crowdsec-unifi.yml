@@ -1,6 +1,6 @@
 services:
   syslog:
-    image: linuxserver/syslog-ng:4.10.2
+    image: linuxserver/syslog-ng:4.10.2@sha256:37e50a461d1c8201fdf2b7e319a097e20219d8251d3ea828ebb9106e8b6b0261
     labels:
       - AH.CS.UniFi=true
     deploy:
@@ -94,7 +94,7 @@ services:
           - bouncer
           
   blocklist:
-    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.1
+    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.1@sha256:65824d5adbb03dc313653795886e7daa22e16015b3188c91f4a0ddf20aa70f4f
     depends_on:
       engine:
         condition: service_healthy
