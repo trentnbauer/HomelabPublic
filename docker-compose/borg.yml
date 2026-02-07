@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    image: ainullcode/borg-ui:1.65.0
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: ${CPU_LIMIT:-2}
+          memory: ${MEMORY_LIMIT:-1024}m
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse
+    security_opt:
+      - apparmor:unconfined
+    ports:
+      - ${WEBPORT:-8081}:8081
+    volumes:
+      - data:/data
+      - cache:/home/borg/.cache/borg
+      - /etc/localtime:/etc/localtime:ro
+      - ${BACKUP_DIR}:${BACKUP_DIR}
+      - keys:/home/borg/.ssh
+      #- /var/lib/docker/volumes:/backup/aptdocker:rw
+      #- /var/snap/docker/common/var-lib-docker/volumes:/backup/snapdocker:rw
+    environment:
+      - TZ=${TZ:-Australia/Melbourne}  # Set your timezone
+      - PUID=0
+      - PGID=0
+    labels:
+      - dfgeneric.enable=${CFTUNNEL:-true}
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME:-localhost}:${WEBPORT:-8081}
+      - dfgeneric.0.access.policy=${CFPOLICY:-default_tld} #default_tld, authenticate, bypass
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}
+
+volumes:
+  data:
+  cache:
+  keys:
+
