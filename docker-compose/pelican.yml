@@ -205,6 +205,7 @@ services:
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
       - ENROLL_KEY=${CROWDSEC_ENROLL_KEY}
+      - BLOCKLISTPASSWORD=${BLOCKLISTPASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
     volumes:
       - crowdsec-data:/var/lib/crowdsec/data
       - crowdsec-config:/etc/crowdsec
@@ -218,6 +219,10 @@ services:
       Management:
         aliases:
           - crowdsec
+    entrypoint: >
+      /bin/bash -c "
+      cscli machines add blocklist --password $$BLOCKLISTPASSWORD -f /etc/crowdsec/blocklist_credentials.yaml --force && 
+      /bin/bash /docker_start.sh" 
 
   crowdsecbouncer-cloudflare:
     image: ghcr.io/crowdsecurity/cloudflare-bouncer:v0.3.0@sha256:39719a070c154866ebc81335e70fdfa1c61eac45025fee7d9bbf8da689fbb2c6
@@ -240,11 +245,36 @@ services:
       CF_APITOKEN: ${CF_APITOKEN}
       CF_ACCOUNTID: ${CF_ACCOUNTID}
       CF_ZONE_ID: ${CF_ZONE_ID}
+    labels:
+      - PelicanAutoheal=true
     volumes:
       - bouncer-config:/etc/crowdsec/bouncers/:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       - Management
+
+  crowdsec-blocklist:
+    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.1@sha256:65824d5adbb03dc313653795886e7daa22e16015b3188c91f4a0ddf20aa70f4f
+    depends_on:
+      crowdsec-engine:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      - PelicanAutoheal=true
+    environment:
+      - CROWDSEC_LAPI_URL=http://crowdsec:8080
+      - CROWDSEC_MACHINE_ID=blocklist
+      - CROWDSEC_MACHINE_PASSWORD=${BLOCKLISTPASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
+      - MODE=lapi
+      - DECISION_DURATION=24h
+      - TZ=${TZ:-UTC}
+      #- MAX_DECISIONS=${MAX_DECISIONS:-8000} # USG3P=8000, UDR=15000, UDM Pro=50000
+    entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
+    # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
+    networks:
+      crowdsec:
+        aliases:
+          - blocklist
 
   autoheal:
     deploy:
