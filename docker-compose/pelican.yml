@@ -272,7 +272,7 @@ services:
     entrypoint: /bin/sh -c "while true; do /usr/local/bin/import.sh; echo 'Sleeping for 6 hours...'; sleep 21600; done"
     # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
     networks:
-      crowdsec:
+      Management:
         aliases:
           - blocklist
 
