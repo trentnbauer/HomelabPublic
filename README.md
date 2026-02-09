@@ -9,14 +9,8 @@ This repository has been structured with an educational focus to support the sel
 * **Security Best Practices:** Implementing CrowdSec and Cloudflare to protect public-facing services from malicious traffic.
 * **Game Server Management:** Providing deep-dive configuration tuning for panels like Pelican and Pterodactyl, along with specific game optimizations for titles such as *Insurgency: Sandstorm*.
 
-## Repository Structure
-* **`.github/`**: Contains automation workflows for repository synchronization and specialized issue templates for documentation corrections.
-* **`docker-compose/`**: A library of deployment files for media management (Plex, Arr suite), monitoring (Beszel, Uptime Kuma), and various utility tools.
-* **`crowdsec/`**: Security configurations for local firewall and Cloudflare-level threat mitigation.
-
 ## Community & Support
 This project is an open-source educational resource. While primarily for documentation, minimal community support is available through:
-* **Discord**: Join the conversation at [A Gamers Grind](https://discord.agamersgrind.com).
 * **Website**: Technical guides and deep dives at [trentbauer.com](https://trentbauer.com).
 
 ## Pterodactyl / Pelican
