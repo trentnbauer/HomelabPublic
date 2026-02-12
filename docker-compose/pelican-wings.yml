@@ -1,6 +1,6 @@
 services:
   wings:
-    image: ghcr.io/pelican-dev/wings:v1.0.0-beta22
+    image: ghcr.io/pelican-dev/wings:v1.0.0-beta23
     deploy:
       restart_policy:
         condition: on-failure
