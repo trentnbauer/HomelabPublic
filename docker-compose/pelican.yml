@@ -219,10 +219,10 @@ services:
       Management:
         aliases:
           - crowdsec
-    entrypoint: >
-      /bin/bash -c "
-      cscli machines add blocklist --password $$BLOCKLISTPASSWORD -f /etc/crowdsec/blocklist_credentials.yaml --force && 
-      /bin/bash /docker_start.sh" 
+    #entrypoint: >
+    #  /bin/bash -c "
+    #  cscli machines add blocklist --password $$BLOCKLISTPASSWORD -f /etc/crowdsec/blocklist_credentials.yaml --force && 
+    #  /bin/bash /docker_start.sh" 
 
   crowdsecbouncer-cloudflare:
     image: ghcr.io/crowdsecurity/cloudflare-bouncer:v0.3.0@sha256:39719a070c154866ebc81335e70fdfa1c61eac45025fee7d9bbf8da689fbb2c6
@@ -236,9 +236,9 @@ services:
         limits:
           cpus: ${CROWDSEC_CPULIMIT:-2}
     restart: unless-stopped
-    #depends_on:
-    #  crowdsec-engine:
-    #    condition: service_healthy
+    depends_on:
+      crowdsec-engine:
+        condition: service_healthy
     environment:
       API_URL: http://crowdsec:8080
       API_KEY: Heroics9HeadrestQuenchHullPatriot
@@ -255,9 +255,9 @@ services:
 
   crowdsec-blocklist:
     image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:2.1.1@sha256:65824d5adbb03dc313653795886e7daa22e16015b3188c91f4a0ddf20aa70f4f
-    #depends_on:
-    #  crowdsec-engine:
-    #    condition: service_healthy
+    depends_on:
+      crowdsec-engine:
+        condition: service_healthy
     restart: unless-stopped
     labels:
       - PelicanAutoheal=true
