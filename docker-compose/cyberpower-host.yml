@@ -11,7 +11,7 @@ services:
     volumes:
       - data:/data
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+      #- /etc/timezone:/etc/timezone:ro
     labels:
       - dfgeneric.enable=true
       - dfgeneric.hostname=${CFSUBDOMAIN}${CFDOMAIN}
