@@ -1,0 +1,8 @@
+blank_issues_enabled: false # Forces users to use your templates
+contact_links:
+  - name: "Search Existing Issues"
+    url: "https://github.com/trentnbauer/HomelabPublic/issues"
+    about: "Before opening a new one, please check if someone else has already reported this."
+  - name: "Check For Existing Documentation"
+    url: "https://www.trentbauer.com/guides"
+    about: "The answer might already be listed on my documentation site - don't forget to check the Troubleshooting section"
