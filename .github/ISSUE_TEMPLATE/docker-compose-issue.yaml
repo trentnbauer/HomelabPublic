@@ -11,7 +11,26 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: "Describe the bug"
+      label: "Describe the issue"
+    validations:
+      required: true
+  - type: textarea
+    id: attempts
+    attributes:
+      label: "Steps you've taken to try and fix it"
+    validations:
+      required: false
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps followed / how to reproduce"
+      placeholder: "Rebooted host, deleted docker volumes"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behaviour"
     validations:
       required: true
   - type: textarea
@@ -20,12 +39,6 @@ body:
       label: "Any relevant log files"
     validations:
       required: false
-  - type: textarea
-    id: reproduction
-    attributes:
-      label: "To Reproduce"
-    validations:
-      required: true
 
   # --- Individual Single Line Inputs ---
   - type: input
@@ -40,7 +53,7 @@ body:
     id: docker-version
     attributes:
       label: "Docker Version"
-      placeholder: "e.g. 27.3.1"
+      placeholder: "run command: Docker --version"
     validations:
       required: true
 
