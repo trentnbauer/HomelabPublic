@@ -37,6 +37,8 @@ body:
     id: logs
     attributes:
       label: "Any relevant log files"
+      description: "Paste output from 'docker logs' here."
+      render: json
     validations:
       required: false
 
