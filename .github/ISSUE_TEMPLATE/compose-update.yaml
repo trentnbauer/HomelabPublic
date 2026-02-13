@@ -1,6 +1,6 @@
 name: "Feature Request (Existing Compose)"
 description: "Request an addition or change to an existing docker-compose file"
-title: "[Feature]: "
+title: "[COMPOSE]: "
 labels: ["enhancement"]
 assignees:
   - trentnbauer
