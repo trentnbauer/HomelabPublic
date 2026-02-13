@@ -1,5 +1,5 @@
 name: "Docker Compose Issue"
-description: "Create a report to help us improve"
+description: "Report an issue with an existing compose file"
 title: "[COMPOSE]: "
 labels: ["bug"]
 assignees:
@@ -8,6 +8,15 @@ body:
   - type: markdown
     attributes:
       value: "Thanks for reporting a bug! Please fill out the sections below."
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Compose File"
+      description: "Paste the compose file you are using here"
+      placeholder: "Don't forget to remove any secret or passwords - I recommend setting them as ${variables}"
+      render: json
+    validations:
+      required: true
   - type: textarea
     id: description
     attributes:
