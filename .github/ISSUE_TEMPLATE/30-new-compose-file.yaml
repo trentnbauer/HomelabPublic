@@ -45,7 +45,7 @@ body:
     id: additional-info
     attributes:
       label: "Anything else?"
-      description: "Special hardware needs or specific preferences?"
+      placeholder: "Special hardware needs or specific preferences?"
 
   - type: checkboxes
     id: terms
