@@ -1,0 +1,59 @@
+name: "Docker Compose Issue"
+description: "Create a report to help us improve"
+title: "[DC]: "
+labels: ["bug"]
+assignees:
+  - trentnbauer
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the sections below to help us troubleshoot the issue.
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the bug"
+      description: "A clear and concise description of what the bug is."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "To Reproduce"
+      description: "Steps to reproduce the behavior."
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected behavior"
+      description: "A clear and concise description of what you expected to happen."
+    validations:
+      required: true
+  - type: textarea
+    id: host-info
+    attributes:
+      label: "Docker Host Information"
+      description: "Details about the environment where Docker is running."
+      value: |
+        OS: 
+        Docker Version: 
+        How Compose is being deployed: (eg Portainer)
+    validations:
+      required: true
+  - type: checkboxes
+    id: screenshots
+    attributes:
+      label: "Screenshots"
+      options:
+        - label: "I have attached screenshots to help explain my problem (if applicable)"
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional context"
+      description: "Add any other context about the problem here."
