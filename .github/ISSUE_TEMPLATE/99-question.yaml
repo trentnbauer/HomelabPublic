@@ -1,6 +1,8 @@
 name: "Question"
 description: "Ask a question about a project or configuration"
 labels: ["question"]
+assignees:
+  - trentnbauer
 body:
   - type: textarea
     id: question
