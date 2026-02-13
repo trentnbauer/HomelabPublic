@@ -1,6 +1,6 @@
 name: "Docker Compose Issue"
 description: "Create a report to help us improve"
-title: "[DC]: "
+title: "[COMPOSE]: "
 labels: ["bug"]
 assignees:
   - trentnbauer
