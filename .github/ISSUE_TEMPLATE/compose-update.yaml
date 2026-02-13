@@ -1,0 +1,41 @@
+name: "Feature Request (Existing Compose)"
+description: "Request an addition or change to an existing docker-compose file"
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees:
+  - trentnbauer
+body:
+  - type: markdown
+    attributes:
+      value: "Use this to request new features, sidecars, or configuration changes to an existing stack."
+
+  - type: input
+    id: existing-service
+    attributes:
+      label: "Provide the URL for the Compose File"
+      placeholder: "e.g., My Media Stack, Home Assistant, etc."
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: "What feature or change do you want to add?"
+      description: "Explain what is missing or what you want to achieve."
+      placeholder: "e.g., I want to add a Gluetun VPN sidecar to my download client."
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefit
+    attributes:
+      label: "Why is this needed?"
+      placeholder: "e.g., To ensure all traffic from this container is encrypted."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: "Additional Context"
+      description: "Any links to documentation or specific image requirements?"
