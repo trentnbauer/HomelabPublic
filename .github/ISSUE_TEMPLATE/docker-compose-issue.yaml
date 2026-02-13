@@ -14,6 +14,12 @@ body:
       label: "Describe the bug"
     validations:
       required: true
+  - type: logs
+    id: description
+    attributes:
+      label: "Any relevant log files"
+    validations:
+      required: false
   - type: textarea
     id: reproduction
     attributes:
@@ -42,7 +48,7 @@ body:
     id: deployment-method
     attributes:
       label: "How Compose is being deployed"
-      placeholder: "e.g. Portainer, CLI, Pterodactyl"
+      placeholder: "e.g. Portainer, CLI, DockGE etc"
     validations:
       required: true
 
