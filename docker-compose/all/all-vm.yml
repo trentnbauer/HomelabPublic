@@ -19,33 +19,32 @@ services:
     security_opt:
       - apparmor:unconfined
   
-  prunemate-proxy:
-    #network_mode: host
-    image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
-    restart: unless-stopped
-    security_opt:
-      - apparmor:unconfined
-    ports:
-      - 2375:2375
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - ALLOW_START=1
-      - ALLOW_STOP=1
-      - ALLOW_RESTART=1
-      - IMAGES=1
-      - CONTAINERS=1
-      - VOLUMES=1
-      - NETWORKS=1
-      - POST=1
-    healthcheck:
-      test: wget --spider http://localhost:2375/version || exit 1
-      interval: "29s"
-      timeout: "5s"
-      retries: 3
-      start_period: "21s"
-    labels:
-      - autoheal=true
+  #prunemate-proxy:
+  #  image: ghcr.io/tecnativa/docker-socket-proxy:v0.4.2
+  #  restart: unless-stopped
+  #  security_opt:
+  #    - apparmor:unconfined
+  #  ports:
+  #    - 2375:2375
+  #  volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock:ro
+  #  environment:
+  #    - ALLOW_START=1
+  #    - ALLOW_STOP=1
+  #    - ALLOW_RESTART=1
+  #    - IMAGES=1
+  #    - CONTAINERS=1
+  #    - VOLUMES=1
+  #    - NETWORKS=1
+  #    - POST=1
+  #  healthcheck:
+  #    test: wget --spider http://localhost:2375/version || exit 1
+  #    interval: "29s"
+  #    timeout: "5s"
+  #    retries: 3
+  #    start_period: "21s"
+  #  labels:
+  #    - autoheal=true
       
   watchtower:
     image: ghcr.io/containrrr/watchtower:1.7.1
