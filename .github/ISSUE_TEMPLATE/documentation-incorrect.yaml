@@ -1,0 +1,42 @@
+name: "Documentation Incorrect"
+description: "Report an issue with my documentation"
+title: "[DOCS]: "
+labels: ["documentation"]
+assignees:
+  - trentnbauer
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for helping keep the documentation accurate!"
+  
+  - type: input
+    id: page-link
+    attributes:
+      label: "Link to page"
+      placeholder: "e.g., https://docs.example.com/setup-guide"
+    validations:
+      required: true
+
+  - type: input
+    id: section
+    attributes:
+      label: "Section of documentation that is incorrect"
+      placeholder: "e.g., The 'Installation' header or Step 4"
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: "What it should be, or why it is incorrect"
+      description: "Please provide the correct information or explain the error."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: "Expectation Management"
+      options:
+        - label: "I understand that this documentation is maintained as a hobby and updates may take time."
+          required: true
