@@ -1,0 +1,56 @@
+name: "Request Docker Compose File"
+description: "High-level request for a new service or stack"
+title: "[Request]: "
+labels: ["enhancement"]
+assignees:
+  - trentnbauer
+body:
+  - type: markdown
+    attributes:
+      value: "Tell me what you're trying to host, and I'll build the compose file for you."
+  
+  - type: input
+    id: service-name
+    attributes:
+      label: "What app or service do you want to host?"
+      placeholder: "e.g., A personal wiki, a game server, or a media manager"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: "What does it need to do?"
+      placeholder: "e.g., I want to store my technical notes and access them from my phone."
+    validations:
+      required: true
+
+  - type: textarea
+    id: connectivity
+    attributes:
+      label: "What does it need to talk to?"
+      placeholder: "e.g., Needs to connect to a MariaDB database and be behind my reverse proxy."
+    validations:
+      required: true
+
+  - type: textarea
+    id: storage-needs
+    attributes:
+      label: "Does it need to save data permanently?"
+      placeholder: "e.g., Yes, I need it to save my configs and a library of PDFs."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: "Anything else?"
+      description: "Special hardware needs or specific preferences?"
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: "Expectation Management"
+      options:
+        - label: "I understand that this is a request and there is no guarantee that a file will be created."
+          required: true
