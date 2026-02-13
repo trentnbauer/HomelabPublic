@@ -14,8 +14,8 @@ body:
       label: "Describe the bug"
     validations:
       required: true
-  - type: logs
-    id: description
+  - type: textarea
+    id: logs
     attributes:
       label: "Any relevant log files"
     validations:
