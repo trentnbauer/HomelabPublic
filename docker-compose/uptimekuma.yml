@@ -8,6 +8,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - UPTIME_KUMA_DISABLE_FRAME_SAMEORIGIN=true
+      - UPTIME_KUMA_WS_ORIGIN_CHECK=bypass
       - UPTIME_KUMA_CLOUDFLARED_TOKEN=$CFTOKEN
     ports:
       - ${PORT:-3001}:3001  # <Host Port>:<Container Port>
