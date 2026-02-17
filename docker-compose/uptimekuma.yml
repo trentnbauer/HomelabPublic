@@ -17,8 +17,6 @@ services:
       retries: 3
       start_period: 30s
       timeout: 20s
-    networks:
-      - cloudflare-net
     labels:
       - autoheal=true
       - dfgeneric.enable=${CFTUNNEL:-true}
@@ -70,8 +68,4 @@ services:
         max-file: "3"
 volumes:
   app:
-networks:
-  cloudflare-net:
-    name: cloudflare-net
-    external: true
 
