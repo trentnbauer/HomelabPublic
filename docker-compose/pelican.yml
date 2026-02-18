@@ -254,7 +254,7 @@ services:
       - Management
 
   crowdsec-blocklist:
-    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:3.3.0@sha256:c25a9d2d4cb9a96047f698f0a5c5f4bbf8529080fa641ac2304d01c562550171
+    image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:3.3.2@sha256:dc562b89ec4642f5e587641408059b0e880cc4b460546527cc3831470e809538
     depends_on:
       crowdsec-engine:
         condition: service_healthy
