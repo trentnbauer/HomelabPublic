@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/arunoruto/beszel-agent:0.18.3@sha256:13d67a70faeb3891a729af2c7c21772fdf39011737cdcf80c2b466787abec540
+    image: ghcr.io/arunoruto/beszel-agent:0.18.4@sha256:d5327808f5a62deb35d6ec7d19f858c7751a7c317e3d0a11cc8f4b8960d85d25
     restart: unless-stopped
     deploy:
       resources:
