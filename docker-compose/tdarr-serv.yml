@@ -63,7 +63,7 @@ services:
             capabilities: [gpu]
             
   nodeA:
-    image: ghcr.io/haveagitgat/tdarr_node:2.61.01
+    image: ghcr.io/haveagitgat/tdarr_node:2.62.01
     restart: unless-stopped
     network_mode: service:server
     environment:
