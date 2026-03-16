@@ -258,3 +258,5 @@ networks:
     name: wings-mgmt
   wings:
     name: pelican_nw
+  games:
+    name: pelican0
