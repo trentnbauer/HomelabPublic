@@ -258,11 +258,3 @@ networks:
     name: wings-mgmt
   wings:
     name: pelican_nw
-  wings0:
-    name: wings0
-    driver: bridge
-    ipam:
-      config:
-        - subnet: "192.192.192.0/24"
-    driver_opts:
-      com.docker.network.bridge.name: wings0
