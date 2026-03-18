@@ -1,7 +1,7 @@
 version: "2.3"
 services:
   server:
-    image: ghcr.io/haveagitgat/tdarr:2.63.01
+    image: ghcr.io/haveagitgat/tdarr:2.64.02
     restart: unless-stopped
     ports:
       - ${WEBUI:-8265}:8265 # webUI port
@@ -63,7 +63,7 @@ services:
             capabilities: [gpu]
             
   nodeA:
-    image: ghcr.io/haveagitgat/tdarr_node:2.63.01
+    image: ghcr.io/haveagitgat/tdarr_node:2.64.02
     restart: unless-stopped
     network_mode: service:server
     environment:
