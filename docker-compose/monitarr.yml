@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    image: ghcr.io/nickshanks347/monitarr:latest@sha256:ba45015c688fbc56a201c13d51bb07d76adb0d4f008ce4468042b76c6f14f6e8
+    image: ghcr.io/nickshanks347/monitarr:latest@sha256:ab6a77122e16e13aa99cefc85f975f1eda2cfe0ae0c6bb888a755244dcb5b63b
     ports:
       - ${PORT:-3000}:3000
     environment:
