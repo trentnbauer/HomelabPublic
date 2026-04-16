@@ -141,7 +141,7 @@ services:
       AUTOHEAL_START_PERIOD: 240
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
-    image: willfarrell/autoheal@sha256:c3a86c91308d9fedfe0f3ad977d091715dae757abf77264f60a63a0f7857094c
+    image: willfarrell/autoheal@sha256:9365574e49d9d2a1cacb612fd8873cca3e94f0b9dd2fa0f0d3be03e0078edca8
     restart: always
     network_mode: none
     volumes:
