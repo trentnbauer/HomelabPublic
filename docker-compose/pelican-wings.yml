@@ -88,7 +88,7 @@ services:
       - ah-wings=true
       
   ddns:
-    image: favonia/cloudflare-ddns:1.15.1
+    image: favonia/cloudflare-ddns:1.16.2
     deploy:
       restart_policy:
         condition: on-failure
