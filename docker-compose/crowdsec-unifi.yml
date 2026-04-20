@@ -115,7 +115,7 @@ services:
           - blocklist
           
   init:
-    image: alpine:3.23.3
+    image: alpine:3.23.4
     volumes:
       - crowdsec:/etc/crowdsec
       - logs:/var/log/syslog
