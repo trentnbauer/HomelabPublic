@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ainullcode/borg-ui:2.0.6
+    image: ainullcode/borg-ui:2.0.7
     restart: unless-stopped
     deploy:
       restart_policy:
