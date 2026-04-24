@@ -128,7 +128,30 @@ services:
       - dfgeneric.0.zonename=${URLTLD}
       #- dfgeneric.path=${URLPATH:-}
 
+  blackbox-agent:
+    image: ghcr.io/maxjb-xyz/blackbox-agent:0.2.1
+    restart: unless-stopped
+    volumes:
+      - blackbox-agent:/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc:/watch/etc:ro
+      - /run/log/journal:/run/log/journal:ro
+      - /var/log/journal:/var/log/journal:ro
+      - /etc/machine-id:/etc/machine-id:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - TZ=${TZ:-Australia/Melbourne}
+      - SERVER_URL=${BLACKBOX_SERVER_URL}
+      - AGENT_TOKEN=${NODE_NAME}
+      - NODE_NAME=${NODE_NAME}
+      - WATCH_PATHS=${WATCH_PATHS:-/watch/etc}
+      - WATCH_SYSTEMD=${WATCH_SYSTEMD:-true}
+
 volumes:
   dockflare:
   portacker:
-
+  blackbox-agent:
