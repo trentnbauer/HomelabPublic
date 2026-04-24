@@ -42,7 +42,7 @@ services:
       - autoheal=true
       
   watchtower:
-    image: ghcr.io/containrrr/watchtower:1.7.1
+    image: ghcr.io/nicholas-fedor/watchtower:1.16.1
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
