@@ -37,6 +37,7 @@ services:
       - VOLUMES=1
       - NETWORKS=1
       - POST=1
+      - DOCKER_API_VERSION=1.44
     healthcheck:
       test: wget --spider http://localhost:2375/version || exit 1
       interval: "29s"
