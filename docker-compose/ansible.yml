@@ -1,0 +1,85 @@
+version: '3'
+  
+services:
+  mysql:
+    image: mysql:9.6
+    hostname: mysql
+    volumes:
+      - mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=semaphore
+      - MYSQL_USER=semaphore
+      - MYSQL_PASSWORD=$DB_PW  # change!
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u semaphore --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    labels:
+      - autoheal=true
+  app:
+    image: semaphoreui/semaphore:v2.17.38
+    hostname: ${ALIAS:-semaphore}
+    ports:
+      - ${PORT:-3000}:3000
+    environment:
+      - SEMAPHORE_DB_USER=semaphore
+      - SEMAPHORE_DB_PASS=$DB_PW  # change!
+      - SEMAPHORE_DB_HOST=mysql
+      - SEMAPHORE_DB_PORT=3306
+      - SEMAPHORE_DB_DIALECT=mysql
+      - SEMAPHORE_DB=semaphore
+      - SEMAPHORE_PLAYBOOK_PATH=/tmp/semaphore/
+      - SEMAPHORE_ADMIN_PASSWORD=$ADMIN_UN  # change!
+      - SEMAPHORE_ADMIN_NAME=$ADMIN_UN
+      - SEMAPHORE_ADMIN_EMAIL=ADMIN_EMAIL
+      - SEMAPHORE_ADMIN=$ADMIN_UN
+      - SEMAPHORE_ACCESS_KEY_ENCRYPTION=$ENCRYPTIONKEY  # add to your access key encryption !
+      - ANSIBLE_HOST_KEY_CHECKING=false  # (optional) change to true if you want to enable host key checking
+    volumes:
+      - inventory:/inventory:ro
+      - authorized-keys:/authorized-keys:ro
+      - config:/etc/semaphore:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    restart: unless-stopped
+    labels:
+      - autoheal=true
+      - dfgeneric.enable=${CFTUNNEL:-true}
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME:-localhost}:${PORT:-3000}
+      - dfgeneric.0.access.policy=${CFPOLICY:-default_tld}
+      - dfgeneric.0.access.name=${CFACCESSNAME:-Ansible}
+      - dfgeneric.0.access.session_duration=${CFDURATION:-24h}
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}
+    healthcheck:
+      test: curl --connect-timeout 15 --silent --show-error --fail -k ${PROTOCOL:-http}://localhost:3000
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      timeout: 20s
+    depends_on:
+      - mysql
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "25m"
+        max-file: "3"
+
+volumes:
+  inventory:
+  authorized-keys:
+  config:
+  mysql:
+
