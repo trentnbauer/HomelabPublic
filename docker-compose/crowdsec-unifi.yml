@@ -61,6 +61,26 @@ services:
       crowdsec:
         aliases:
           - crowdsec
+
+setup-blocklist:
+    image: crowdsecurity/crowdsec:v1.7.7@sha256:6ca53ad26196ca59ddd4fa692a586b73d8fcde085046163b9ca2f04887dca563
+    depends_on:
+      engine:
+        condition: service_healthy
+    volumes:
+      - crowdsec:/etc/crowdsec
+    networks:
+      - crowdsec
+    environment:
+      - BLOCKLISTPASSWORD=${BLOCKLISTPASSWORD:-OccupantCorporalVividness9DiabetesCrumb}
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        cscli machines add blocklist \
+          --url http://crowdsec:8080 \
+          --password "$$BLOCKLISTPASSWORD" \
+          -f /etc/crowdsec/blocklist_credentials.yaml \
+          --force
       
   bouncer:
     image: ghcr.io/teifun2/cs-unifi-bouncer:v1.2.2@sha256:16590b6fc7cb784fc2fc2fbd7fa3a2782f12823e2787dfb55f63fc8521bc4853
