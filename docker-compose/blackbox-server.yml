@@ -1,0 +1,30 @@
+services:
+  server:
+    image: ghcr.io/maxjb-xyz/blackbox-server:0.2.1
+    restart: unless-stopped
+    ports:
+      - ${PORT:-8080}:8080
+    volumes:
+      - blackbox-data:/data
+    labels:
+      - autoheal=true
+      - dfgeneric.enable=${CFTUNNEL:-true}
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME:-localhost}:${PORT:-8080}
+      - dfgeneric.0.access.policy=${CFPOLICY:-default_tld}
+      - dfgeneric.0.name=Blackbox
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - TZ=${TZ:-Australia/Melbourne}
+      - JWT_SECRET=${JWT_SECRET}
+      - AGENT_TOKENS=${AGENT_TOKENS}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+
+volumes:
+  blackbox-data:
