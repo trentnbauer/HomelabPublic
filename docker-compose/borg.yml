@@ -34,6 +34,7 @@ services:
       - TZ=${TZ:-Australia/Melbourne}  # Set your timezone
       - PUID=0
       - PGID=0
+      - DISABLE_AUTHENTICATION=true
     labels:
       - dfgeneric.enable=${CFTUNNEL:-true}
       - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
