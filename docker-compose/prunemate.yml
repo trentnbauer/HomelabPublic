@@ -1,0 +1,29 @@
+services:
+  app:
+    image: anoniemerd/prunemate:1.3.3@sha256:c9b485b6bf11d8b1393f2fd64df994cac5080821b449ed935512dca8d72d32fc
+    ports:
+      - ${WEBPORT:-8080}:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3" 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - logs:/var/log
+      - config:/config
+    environment:
+      - PRUNEMATE_TZ=${TZ:-Australia/Melbourne} # Change this to your desired timezone
+      - PRUNEMATE_TIME_24H=false #false for 12-Hour format (AM/PM)
+    restart: unless-stopped
+    labels:
+      - dfgeneric.enable=${CFTUNNEL:-true}
+      - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
+      - dfgeneric.0.service=http://${HOSTNAME:-localhost}:${WEBPORT:-8080}
+      - dfgeneric.0.access.policy=${CFPOLICY:-default_tld} #default_tld, authenticate, bypass
+      - dfgeneric.0.zonename=${CFDOMAIN}
+      - dfgeneric.0.path=${CFURLPATH:-}    
+volumes:
+    logs:
+    config:
+
