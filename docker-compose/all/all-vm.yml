@@ -132,11 +132,6 @@ services:
   blackbox-agent:
     image: ghcr.io/maxjb-xyz/blackbox-agent:0.3.0
     restart: unless-stopped
-    user: root
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /run
     volumes:
       - blackbox-agent:/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
