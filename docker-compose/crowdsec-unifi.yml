@@ -22,12 +22,22 @@ services:
       crowdsec:
         aliases:
           - syslog
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
           
   engine:
     image: crowdsecurity/crowdsec:v1.7.7@sha256:6ca53ad26196ca59ddd4fa692a586b73d8fcde085046163b9ca2f04887dca563
     restart: unless-stopped
     labels:
       - AH.CS.UniFi=true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
     depends_on:
       init:
         condition: service_completed_successfully
@@ -91,6 +101,11 @@ services:
       crowdsec:
         aliases:
           - bouncer
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
           
   blocklist:
     image: ghcr.io/wolffcatskyy/crowdsec-blocklist-import:3.3.2@sha256:dc562b89ec4642f5e587641408059b0e880cc4b460546527cc3831470e809538
@@ -117,6 +132,11 @@ services:
       crowdsec:
         aliases:
           - blocklist
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
           
   init:
     image: alpine:3.23.4
@@ -151,6 +171,11 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
 networks:
   crowdsec:
