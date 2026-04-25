@@ -22,7 +22,7 @@ services:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:6246$${BASE_PATH:-} || exit 1"]
       interval: 30s
       retries: 3
-      start_period: 30s
+      start_period: 5m
       timeout: 20s
     labels:
       - autoheal=true
