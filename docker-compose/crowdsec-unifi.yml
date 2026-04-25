@@ -75,9 +75,9 @@ services:
         window: 120s
     environment:
       - CROWDSEC_URL=http://crowdsec:8080
-      - UNIFI_MAX_GROUP_SIZE=${MAX_DECISIONS:-8000}
-      - BATCH_SIZE=${MAX_DECISIONS:-8000}
-      - UNIFI_MAX_GROUP_SIZE=${MAX_DECISIONS:-8000}
+      - UNIFI_MAX_GROUP_SIZE=${MAX_DECISIONS:-4000}
+      - BATCH_SIZE=${MAX_DECISIONS:-4000}
+      - UNIFI_MAX_GROUP_SIZE=${MAX_DECISIONS:-4000}
       - CROWDSEC_BOUNCER_API_KEY=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
       - UNIFI_HOST=${UNIFI_HOST:-https://unifi}
       - UNIFI_USER=${UNIFI_USER}
@@ -109,7 +109,7 @@ services:
       #- CROWDSEC_CONTAINER=crowdsec-unifi-engine
       - DECISION_DURATION=24h
       - TZ=${TZ:-UTC}
-      - MAX_DECISIONS=${MAX_DECISIONS:-8000} # USG3P=8000, UDR=15000, UDM Pro=50000
+      - MAX_DECISIONS=${MAX_DECISIONS:-4000} # USG3P=8000, UDR=15000, UDM Pro=50000
       - INTERVAL=21600
     #command: sh -c "while true; do python blocklist_import.py; echo 'Sleeping for 6 hours...'; sleep 21600; done"
     # This container is designed to be re-ran manually by the user or manually via a CRON job. I've altered the entrypoint command to sleep the container for 6 hours instead.
