@@ -26,24 +26,6 @@ services:
   engine:
     image: crowdsecurity/crowdsec:v1.7.7@sha256:6ca53ad26196ca59ddd4fa692a586b73d8fcde085046163b9ca2f04887dca563
     restart: unless-stopped
-    entrypoint: /bin/sh -c
-    command:
-      - |
-        # Start the engine in the background
-        /docker_start.sh &
-        
-        # Wait for the Local API to become responsive
-        echo "Waiting for LAPI to start..."
-        until cscli status > /dev/null 2>&1; do
-            sleep 2
-        done
-
-        # Run your registration command
-        echo "Registering blocklist machine..."
-        cscli machines add blocklist --password "$$BLOCKLISTPASSWORD" -f /etc/crowdsec/blocklist_credentials.yaml --force
-        
-        # Bring the background process to the foreground so the container stays alive
-        wait
     labels:
       - AH.CS.UniFi=true
     depends_on:
