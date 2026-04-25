@@ -16,6 +16,7 @@ services:
     environment:
       #- BESZEL_HUB_DISABLE_PASSWORD_AUTH=true
       - BESZEL_HUB_USER_CREATION=true
+      - ALL_URL=${CFSUBDOMAIN}${CFDOMAIN}
     healthcheck:
       test: ['CMD', '/beszel', 'health', '--url', 'http://localhost:8090']
       start_period: 30s
