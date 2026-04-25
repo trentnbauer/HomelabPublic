@@ -75,6 +75,9 @@ services:
         window: 120s
     environment:
       - CROWDSEC_URL=http://crowdsec:8080
+      - UNIFI_MAX_GROUP_SIZE=${MAX_DECISIONS:-8000}
+      - BATCH_SIZE=${MAX_DECISIONS:-8000}
+      - UNIFI_MAX_GROUP_SIZE=${MAX_DECISIONS:-8000}
       - CROWDSEC_BOUNCER_API_KEY=${BOUNCER_KEY:-MandatoryUnsolvedSnippetMonetizeDrizzle8}
       - UNIFI_HOST=${UNIFI_HOST:-https://unifi}
       - UNIFI_USER=${UNIFI_USER}
