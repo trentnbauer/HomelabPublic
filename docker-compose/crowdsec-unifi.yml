@@ -126,7 +126,7 @@ services:
       - TZ=${TZ:-UTC}
       - MAX_DECISIONS=${MAX_DECISIONS:-4000} # USG3P=8000, UDR=15000, UDM Pro=50000
       - INTERVAL=21600
-    command: sh -c "while true; do python blocklist_import.py; echo 'Sleeping for 6 hours...'; sleep 21600; done"
+    #command: sh -c "while true; do python blocklist_import.py; echo 'Sleeping for 6 hours...'; sleep 21600; done"
     networks:
       crowdsec:
         aliases:
