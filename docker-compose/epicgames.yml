@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: ghcr.io/claabs/epicgames-freegames-node:bullseye-slim@sha256:a434967bce1295414c04a05cdf39f43a53b441504b0257287605ba9764222941
+    image: ghcr.io/claabs/epicgames-freegames-node:bullseye-slim@sha256:1d4619a91151f23317d683cfd40efc132834fc18bd9605a332e54bc1de98ed2e
     ports:
       - ${WEBPORT:-3000}:3000/udp
       - ${WEBPORT:-3000}:3000/tcp
