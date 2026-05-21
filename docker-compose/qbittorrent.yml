@@ -19,7 +19,7 @@ services:
     volumes:
       - config:/config
       - data:/data
-      - $DOWNLOADS:/volume1/downloads
+      - ${DOWNLOADS}:${DOWNLOADS}
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:8080
       interval: 30s
