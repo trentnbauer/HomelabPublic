@@ -122,7 +122,7 @@ services:
       #- dfgeneric.path=${URLPATH:-}
 
   blackbox-agent:
-    image: ghcr.io/maxjb-xyz/blackbox-agent:0.4.2
+    image: ghcr.io/maxjb-xyz/blackbox-agent:0.5.0
     restart: unless-stopped
     volumes:
       - blackbox-agent:/data
