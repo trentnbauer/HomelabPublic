@@ -45,6 +45,8 @@ services:
     environment:
       QUI__PORT: ${WEBPORT:-7476}
       QUI__BASE_URL: ${CFURLPATH:-}/
+      QUI__AUTH_DISABLED: ${DISABLE_AUTH:-false}
+      QUI__IF_I_GET_BANNED_ITS_MY_FAULT: ${DISABLE_AUTH:-false}
     logging:
       driver: "json-file"
       options:
