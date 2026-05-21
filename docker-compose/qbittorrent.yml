@@ -21,6 +21,7 @@ services:
       - data:/data
       - ${DOWNLOADS}:${DOWNLOADS}
       - ${DOWNLOADS}:/downloads
+      - ${DOWNLOADS}/incomplete:/incomplete
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:8080
       interval: 30s
