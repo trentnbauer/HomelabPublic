@@ -2,7 +2,7 @@
 version: "2.1"
 services:
   app:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    image: ghcr.io/flaresolverr/flaresolverr:v3.5.0
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
