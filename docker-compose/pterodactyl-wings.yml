@@ -49,7 +49,7 @@ services:
       - dfgeneric.zonename=${CFDOMAIN}
 
   db:
-    image: mariadb:12.2
+    image: mariadb:12.3
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     ports:
