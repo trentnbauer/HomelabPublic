@@ -28,7 +28,7 @@ services:
     labels:
       - autoheal=true
   app:
-    image: semaphoreui/semaphore:v2.18.10
+    image: semaphoreui/semaphore:v2.18.12
     hostname: ${ALIAS:-semaphore}
     ports:
       - ${PORT:-3000}:3000
