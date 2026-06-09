@@ -1,6 +1,12 @@
 services:
   panel:
     image: ghcr.io/pelican-dev/panel:v1.0.0-beta33
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+      - 8.8.8.8
+      - 8.8.4.4
+      - 9.9.9.9
     deploy:
       restart_policy:
         condition: on-failure
