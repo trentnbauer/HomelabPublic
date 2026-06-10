@@ -10,7 +10,7 @@ services:
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       AUTOHEAL_ONLY_MONITOR_RUNNING: true
       WEBHOOK_URL: ${PUSHOVER_WEBHOOK:-""}
-    image: willfarrell/autoheal@sha256:602fe408fdf08ee421b00fc1c063333cbec9b38ce9d0a73779c05e2469d2319d
+    image: willfarrell/autoheal@sha256:9e55551fa5b4d082f40effefcdb27d9f400a4e43f11e3acf05a068a32457ca5c
     network_mode: none
     restart: always
     volumes:
@@ -42,7 +42,7 @@ services:
       - autoheal=true
       
   watchtower:
-    image: ghcr.io/nicholas-fedor/watchtower:1.17.2
+    image: ghcr.io/nicholas-fedor/watchtower:1.18.0
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
