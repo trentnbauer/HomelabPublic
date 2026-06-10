@@ -138,7 +138,7 @@ services:
         max-file: "2"
           
   init:
-    image: alpine:3.23.4
+    image: alpine:3.24.0
     volumes:
       - crowdsec:/etc/crowdsec
       - logs:/var/log/syslog
