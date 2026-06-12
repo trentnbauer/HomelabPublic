@@ -1,6 +1,6 @@
 services:
   panel:
-    image: ghcr.io/pelican-dev/panel:v1.0.0-beta33
+    image: ghcr.io/pelican-dev/panel:v1.0.0-beta34
     dns:
       - 1.1.1.1
       - 1.0.0.1
