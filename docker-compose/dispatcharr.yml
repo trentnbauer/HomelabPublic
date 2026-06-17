@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/dispatcharr/dispatcharr:0.26.0
+    image: ghcr.io/dispatcharr/dispatcharr:0.27.0
     ports:
       - ${WEBPORT:-9191}:9191
     volumes:
