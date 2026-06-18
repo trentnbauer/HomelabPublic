@@ -65,7 +65,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
   init:
-    image: alpine:3.24.0
+    image: alpine:3.24.1
     volumes:
       - config:/etc/crowdsec
       - bouncer:/etc/crowdsec/bouncers
