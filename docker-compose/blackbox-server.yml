@@ -1,6 +1,6 @@
 services:
   server:
-    image: ghcr.io/maxjb-xyz/blackbox-server:0.5.0@sha256:22fda0afca45a8ee30bde8f8f995a39321484a2161d3dc3ab397d23d5a4058c3
+    image: ghcr.io/maxjb-xyz/blackbox-server:0.6.0@sha256:6e832349125b99de6e73d9164edf747b8527665f36a34de77fb47c56899867e7
     restart: unless-stopped
     ports:
       - ${PORT:-8080}:8080
