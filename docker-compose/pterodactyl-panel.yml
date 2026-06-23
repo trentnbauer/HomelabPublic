@@ -43,7 +43,7 @@ services:
         max-file: "3"   
         
   panel:
-    image: ghcr.io/pterodactyl/panel:v1.13.0@sha256:9f5c393b998aafd74729210bde9a864dfed6b5e29e3d103b4a0eabc5835f7060
+    image: ghcr.io/pterodactyl/panel:v1.14.0@sha256:c4e1d87ef64a0649509a5a1c560f63581c7827d221aa845b2315acb08ee50432
     restart: unless-stopped
     ports:
       - ${PORT_HTTP:-80}:80
