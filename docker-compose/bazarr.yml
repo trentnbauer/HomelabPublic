@@ -1,7 +1,7 @@
 version: '2.3'
 services:
   app:
-    image: ghcr.io/linuxserver/bazarr:1.5.6@sha256:8e48a2950e3806a2a914fe031fa21b1c0a0f2824eede4ea747e26213e941fbf2
+    image: ghcr.io/linuxserver/bazarr:1.5.6@sha256:aaaa087af75a73b7ac765dcc5d748874cfafdb93c23ec9f64fbb481dea291b23
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://LOCALHOST:6767
       interval: 30s
