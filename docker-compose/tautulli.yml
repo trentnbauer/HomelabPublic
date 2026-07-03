@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    image: ghcr.io/linuxserver/tautulli:2.17.2@sha256:a152fa8e8e023a3bbac87ac37bf12478890964edd06978bd5e0cd1d42fa6fccb
+    image: ghcr.io/linuxserver/tautulli:2.17.2@sha256:fb1a686e4b676af3bd8f6e1a5a0097ee1540015768e9bbd4445e130d703a68cd
     environment:
       - PUID=1000
       - PGID=1000
