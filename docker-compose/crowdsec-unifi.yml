@@ -1,6 +1,6 @@
 services:
   syslog:
-    image: linuxserver/syslog-ng:4.11.0@sha256:d076625731e5593f2c20772a3f5e54ac32f40b60ec83ca645a6afb4ba37c9bf2
+    image: linuxserver/syslog-ng:4.11.0@sha256:b4ab00e399207db81ddd0bf45aca59ce858ba752ffa949d3dd8a13ca54f4bd0a
     labels:
       - AH.CS.UniFi=true
     deploy:
