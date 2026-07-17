@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    image: ghcr.io/seriousm4x/upsnap:5.4.2@sha256:92ac19e946e2a4fffbd5049ff230485cbceacd002696a9ca8d4f5449f27d7c5d
+    image: ghcr.io/seriousm4x/upsnap:5.4.3@sha256:f145fab17aa305dc35801e0d8c8326aaab24913727aa19b74cb9ad6826c0deb2
     network_mode: host
     restart: unless-stopped
     volumes:
