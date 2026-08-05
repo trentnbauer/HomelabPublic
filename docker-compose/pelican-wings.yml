@@ -158,7 +158,7 @@ services:
           - crowdsec
 
   crowdsec-bouncer-fw:
-    image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.34@sha256:ff1b5b0972ea0cfe39a4f10728effc38f6185a88b742fc4ad5a53d5dca80aca1
+    image: ghcr.io/shgew/cs-firewall-bouncer-docker:v0.0.36@sha256:4a7bd2e3eda81f9382f6e8571cebff7192e9b300e99d1cd5993b3b03580a0cb8
     deploy:
       restart_policy:
         condition: on-failure
