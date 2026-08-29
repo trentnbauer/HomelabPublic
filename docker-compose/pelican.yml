@@ -1,6 +1,6 @@
 services:
   panel:
-    image: ghcr.io/pelican-dev/panel:v1.0.0-beta34
+    image: ghcr.io/pelican/panel:1.0.0-beta38
     deploy:
       restart_policy:
         condition: on-failure
