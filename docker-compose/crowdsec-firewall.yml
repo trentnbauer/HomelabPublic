@@ -1,6 +1,6 @@
 services:
   engine:
-    image: crowdsecurity/crowdsec:v1.7.8@sha256:2f527c9bb8b367120eb08b82890aa912ce96bfa1ada93dda0721700e4b4e0dde
+    image: crowdsecurity/crowdsec:v1.8.1@sha256:0f2523fa61ef507f15d953045cface490cc880670c62f2755ced17524107f71a
     labels:
       - AH.CS.Firewall=true
     deploy:
