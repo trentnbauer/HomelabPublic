@@ -291,7 +291,7 @@ services:
       AUTOHEAL_START_PERIOD: 240
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
-    image: willfarrell/autoheal@sha256:8dff3993db56e6646a3febe690809809159aa14aa6b8ecd205db1f0bc1fbd0e1
+    image: willfarrell/autoheal@sha256:9a2fb22a454e3ce82dd88c99ebf98e86ceab082a415446d0be40e84bec170fad
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
