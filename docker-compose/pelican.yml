@@ -32,6 +32,11 @@ services:
     volumes:
       - panel-data:/pelican-data
       - panel-logs:/var/www/html/storage/logs
+      - type: volume
+        source: panel-data
+        target: /var/www/html/plugins
+        volume:
+          subpath: plugins
     environment:
       TZ: ${TZ:-UTC}
       APP_URL: https://${PANEL_SUBDOMAIN:-panel}.${DOMAIN}
