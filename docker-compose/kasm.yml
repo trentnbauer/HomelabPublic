@@ -1,7 +1,7 @@
 version: "2.3"
 services:
   app:
-    image: ghcr.io/linuxserver/kasm:1.19.0@sha256:22288312b295cfffc15eea2643bd1aee52bb750f1e754ab4d722e7a5ca5a3d7b
+    image: ghcr.io/linuxserver/kasm:1.19.0@sha256:42c3c0f0d692915dcb2c86773a04dd72ea982378c1e600a3f9ef4cca25263f4f
     privileged: true
     environment:
       - PUID=1000
