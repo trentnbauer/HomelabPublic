@@ -16,6 +16,7 @@
             ],
             matchPackageNames: [
                 'willfarrell/autoheal',
+                'trentnbauer/queueup',
             ],
             automerge: true,
             automergeType: 'pr',
