@@ -16,7 +16,7 @@
             ],
             matchPackageNames: [
                 'willfarrell/autoheal',
-                'trentnbauer/queueup',
+                'ghcr.io/trentnbauer/queueup',
             ],
             automerge: true,
             automergeType: 'pr',
