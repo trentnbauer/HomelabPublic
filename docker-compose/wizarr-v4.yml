@@ -2,7 +2,7 @@
 version: "3.5"
 services:
   app:
-    image: ghcr.io/wizarrrr/wizarr:2025.9.1@sha256:b3bf6d81a59d0d1b0fef7cb757b529012173ea084e865310e045508f4b33c2a7
+    image: ghcr.io/wizarrrr/wizarr:v2026.9.1@sha256:3e89f4850092d60f532406209100f5e929e06dd679bfd78c5f3559065f2854e0
     ports:
       - ${PORT:-5690}:5690
     volumes:
