@@ -17,6 +17,7 @@
             matchPackageNames: [
                 'willfarrell/autoheal',
                 'ghcr.io/trentnbauer/queueup',
+                'ghcr.io/linuxserver/plex',
             ],
             automerge: true,
             automergeType: 'pr',
