@@ -21,14 +21,26 @@ services:
       - ${PORT_SETUP:-3000}:3000 #Setup WebGUI
       - ${PORT:-444}:444
     restart: unless-stopped
+    # Healthy = inner dockerd answers and the core Kasm services are running and not unhealthy.
+    # Upgrades: run `docker exec <container> touch /tmp/.kasm-upgrading` first; the flag is ignored after 90 min
+    # and disappears when the container is recreated.
     healthcheck:
-      test: curl --connect-timeout 15 --silent --show-error --fail -k https://localhost:444/api/__healthcheck
+      test:
+        - CMD-SHELL
+        - |
+          f=/tmp/.kasm-upgrading
+          [ -e $$f ] && [ -z "$$(find $$f -mmin +90)" ] && exit 0
+          timeout 10 docker info >/dev/null 2>&1 || exit 1
+          for c in kasm_db kasm_api kasm_manager kasm_agent kasm_proxy; do
+            set -- $$(docker inspect -f '{{.State.Status}} {{if .State.Health}}{{.State.Health.Status}}{{end}}' $$c 2>/dev/null)
+            [ "$$1" = running ] && [ "$$2" != unhealthy ] || exit 1
+          done
       interval: 30s
       retries: 3
-      start_period: 30s
-      timeout: 15s
+      start_period: 5m
+      timeout: 20s
     labels:
-      #- autoheal=true
+      - autoheal=true
       - dfgeneric.enable=${CFTUNNEL:-true}
       - dfgeneric.0.hostname=${CFSUBDOMAIN}${CFDOMAIN}
       - dfgeneric.0.service=https://${HOSTNAME:-localhost}:${PORT:-444}
