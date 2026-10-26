@@ -1,4 +1,3 @@
-version: "2.3"
 services:
   app:
     image: ghcr.io/linuxserver/kasm:1.19.0@sha256:fcf49fd7e982887a12bbc8f43bbb947f4ee00fa30c7d60c99dc16540d68ea199
@@ -17,7 +16,7 @@ services:
       - /dev/input:/dev/input #input support
       - /run/udev/data:/run/udev/data #input support
       - thumbnails:/kasm_release/www/img/thumbnails
-      - /opt/kasm/current/log/agent_json.log:/opt/kasm/current/log/agent_json.log ##CrowdSec logs
+      #- /opt/kasm/current/log/agent_json.log:/opt/kasm/current/log/agent_json.log ##CrowdSec logs
     ports:
       - ${PORT_SETUP:-3000}:3000 #Setup WebGUI
       - ${PORT:-444}:444
