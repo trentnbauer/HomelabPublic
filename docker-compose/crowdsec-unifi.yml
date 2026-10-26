@@ -138,7 +138,7 @@ services:
         max-file: "2"
           
   init:
-    image: alpine:3.24.2
+    image: alpine:3.24.3
     volumes:
       - crowdsec:/etc/crowdsec
       - logs:/var/log/syslog
@@ -164,7 +164,7 @@ services:
       AUTOHEAL_START_PERIOD: 240
       AUTOHEAL_DEFAULT_STOP_TIMEOUT: 60
       WEBHOOK_URL: ${AUTOHEAL_WEBHOOK:-}
-    image: willfarrell/autoheal@sha256:2db3cd6c7cd730bfd6467e176ddaa4f2658e87d5a3ad95e1ec30652de023afcf
+    image: willfarrell/autoheal@sha256:dde994c77d1bf7e8457d6d560d9a06d46a59d21bef537afc45dbaf3cd71f330c
     restart: always
     network_mode: none
     volumes:
