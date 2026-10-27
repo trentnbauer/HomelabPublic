@@ -25,7 +25,7 @@ services:
       - dfgeneric.1.access.policy=${CFPOLICY:-default_tld}
       - dfgeneric.1.name=Wizarr Admin
       - dfgeneric.1.zonename=${CFDOMAIN}
-      - dfgeneric.1.path=${CFURLPATH:-}/login ## Secure the Admin side of the app
+      - dfgeneric.1.path=${CFURLPATH:-}/admin ## Secure the Admin side of the app
     healthcheck:
       test: curl --connect-timeout 15 --silent --show-error --fail -k http://localhost:5690
       interval: 30s
