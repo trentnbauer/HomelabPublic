@@ -200,7 +200,7 @@ services:
         condition: service_completed_successfully
     environment:
       - COLLECTIONS=crowdsecurity/linux
-      - BOUNCER_KEY_CLOUDFLARE=Heroics9HeadrestQuenchHullPatriot
+      - BOUNCER_KEY_CLOUDFLARE=${CF_BOUNCER_KEY:-Heroics9HeadrestQuenchHullPatriot}
       - ENROLL_INSTANCE_NAME=PelicanPanel
       - DISABLE_LOCAL_API=false
       - DISABLE_ONLINE_API=false
@@ -241,7 +241,7 @@ services:
         condition: service_healthy
     environment:
       API_URL: http://crowdsec:8080
-      API_KEY: Heroics9HeadrestQuenchHullPatriot
+      API_KEY: ${CF_BOUNCER_KEY:-Heroics9HeadrestQuenchHullPatriot}
       CF_APITOKEN: ${CF_APITOKEN}
       CF_ACCOUNTID: ${CF_ACCOUNTID}
       CF_ZONE_ID: ${CF_ZONE_ID}
