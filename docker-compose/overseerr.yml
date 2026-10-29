@@ -1,17 +1,18 @@
 version: '3'
 services:
   app:
-    image: ghcr.io/linuxserver/overseerr:1.35.0@sha256:6108ed066d4a919c05251d9dab041c1e55e67ff7247e7b31be97b65ffcbaeeb1
+    image: ghcr.io/seerr-team/seerr:v3.5.1
+    init: true
     environment:
       - TZ=${TZ:-Australia/Melbourne}
     volumes:
-      - app:/config
-      #- www:/app/overseerr/public #rebrand overseerr https://github.com/sct/overseerr/issues/404#issuecomment-1659795118
+      - app:/app/config
+      #- www:/app/overseerr/public #rebrand; path likely differs in Seerr, re-check before enabling
     ports:
       - ${WEBPORT:-5055}:5055
     restart: unless-stopped
     healthcheck:
-      test: curl --connect-timeout 15 --silent --show-error --fail http://localhost:5055/api/v1/status
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
       interval: 1m
       timeout: 30s
       retries: 3
@@ -29,13 +30,7 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"      
+        max-file: "3"
 volumes:
   app:
   #www:
-
-
-
-
-
-
