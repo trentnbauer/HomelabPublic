@@ -41,7 +41,8 @@ services:
         "Invalid season or episode",
         "Unable to parse file",
         "Single episode file contains all episodes in seasons. Review file name or manually import",
-        "Unable to determine if file is a sample"
+        "Unable to determine if file is a sample",
+        "Found executable file with extension:"
         ]'
       ## Radarr
       RADARR_URL: $RADARRURL
