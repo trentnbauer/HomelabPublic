@@ -119,7 +119,10 @@ services:
       - dfgeneric.0.service=http://${HOSTNAME_FQDN:-localhost}:${DOCKLAREPORT:-5000}
       - dfgeneric.0.access.policy=default_tld
       - dfgeneric.0.zonename=${URLTLD}
-      #- dfgeneric.path=${URLPATH:-}
+      - dfgeneric.1.hostname=${HOSTNAME:-MissingHostname}.${URLTLD}
+      - dfgeneric.1.service=http://${HOSTNAME_FQDN:-localhost}:${SYNOLOGYDSMPORT:-5001}
+      - dfgeneric.1.access.policy=default_tld
+      - dfgeneric.1.zonename=${URLTLD}
 
   blackbox-agent:
     image: ghcr.io/maxjb-xyz/blackbox-agent:0.6.0
