@@ -123,6 +123,7 @@ services:
       - dfgeneric.1.service=http://${HOSTNAME_FQDN:-localhost}:${SYNOLOGYDSMPORT:-5001}
       - dfgeneric.1.access.policy=default_tld
       - dfgeneric.1.zonename=${URLTLD}
+      - dfgeneric.1.no_tls_verify=true
 
   blackbox-agent:
     image: ghcr.io/maxjb-xyz/blackbox-agent:0.6.0
