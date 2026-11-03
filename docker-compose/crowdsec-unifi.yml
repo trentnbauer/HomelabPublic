@@ -73,7 +73,7 @@ services:
           - crowdsec
       
   bouncer:
-    image: ghcr.io/teifun2/cs-unifi-bouncer:v1.4.0@sha256:6d68590366ed57b38bc4c30b99849299b686023174e58847ccc94059ab9d5f2b
+    image: ghcr.io/teifun2/cs-unifi-bouncer:v1.5.0@sha256:543f732286daf2262f2adea7f7bf3aada57e7ec75f8b1c2baf00e96e0a9649c5
     restart: unless-stopped
     labels:
       - AH.CS.UniFi=true
