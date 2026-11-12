@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   wings:
-    image: ghcr.io/pterodactyl/wings:v1.13.4@sha256:f3eb1fcca035ba94256d612e31315bf33db948693db1a9c4646ce398aefc2f1b
+    image: ghcr.io/pterodactyl/wings:v1.13.5@sha256:6d0a513d1999e2d7930dde3fffb78fb80f38e0413452d28f64320c54f11be056
     restart: always
     logging:
       driver: "json-file"
