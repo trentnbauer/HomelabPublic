@@ -42,7 +42,7 @@ services:
         "Unable to parse file",
         "Single episode file contains all episodes in seasons. Review file name or manually import",
         "Unable to determine if file is a sample",
-        "Found executable file with extension:"
+        "Caution: Found executable file with extension: '.exe'"
         ]'
       ## Radarr
       RADARR_URL: $RADARRURL
