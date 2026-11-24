@@ -1,6 +1,6 @@
 services:
   app:
-    image: anoniemerd/prunemate:1.4.0@sha256:5fd5dfc06e0e4ab4878a2f03b77b0dfdb0fb5f7ecc170caaf291f0f285a48e6c
+    image: anoniemerd/prunemate:2.0.0@sha256:e18233c23046fc5632617f8d13750897b001b20dc1c78693131ea2955208f0c6
     ports:
       - ${WEBPORT:-8080}:8080
     logging:
